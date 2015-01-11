@@ -1,25 +1,20 @@
 INSTALL.txt
 ===========
 
+Welcome to MyJourney install process
 
 Before you can run this app 
 
-
 a) you might need some node modules installed:
-
 	
-So run following comman in the base directory:
+So run following command in the base directory:
  		
 npm install
 
+b) install and startup other modules. Type:
 
-b) install and startup the Redis key/value store (our database)
-	
-e.g. brew install redis
-	then run command "redis-server"
-	
-	
-	
+npm install crypto
+
 
 To run this app 
 
@@ -31,14 +26,16 @@ or
 		
 node index.js
 
+You also can pass the port in the Command Line, like:
+
+node index.js 1234
+
 c2) in 	development mode (auto-restart on changed files)
 		 
 supervisor index.js 
 
 
-
-
-d) Test (with curl client) or 
+c3) Test (with curl client) or 
 	
 try it in the browser and open URL:
 	

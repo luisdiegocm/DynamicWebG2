@@ -1,24 +1,30 @@
 "use strict"
 
+//Modules
 var fs = require('fs')
 
-// http://localhost:1337/public/img/logo.html
-// http://localhost:1337/public/welcome.html
-// http://localhost:1337/public/style/main.css
-
+//Initialize the class
 var StaticFilesController = function(){
 	console.log("DEBUG StaticFilesController initialisation...")
 }
 
+//Function that handles the URL that receive
 StaticFilesController.prototype.handle = function(restUrl,res){
+    //Get the filename that receives from the URL
 	var filename = restUrl.filename
-	if (restUrl.resource.length>0) filename = restUrl.resource+"/"+filename
-	if (restUrl.relPath.length>0)  filename = restUrl.relPath+"/"+filename
-	console.log("DEBUG: serving static '"+restUrl.format+"' file: '"+filename+"'...")
-		var returnErr=this.returnErr
-	fs.readFile(filename,function(err, filedata){ // async read data (from fs/db)
+    //Checks out if have a resource in the URL path
+	if (restUrl.resource.length>0){ 
+        filename = restUrl.resource+"/"+filename
+    }
+	if (restUrl.relPath.length>0){
+        filename = restUrl.relPath+"/"+filename
+    }
+	console.log("Static file '"+restUrl.format+"' file: '"+filename+"'...")
+    var returnErr=this.returnErr
+	//Reads the file that was received
+    fs.readFile(filename,function(err, filedata){ // async read data (from fs/db)
 		if (err === null ){
-			if ( restUrl.format.indexOf('png')>=0 ){
+			if (restUrl.format.indexOf('png')>=0 ){
 				res.writeHead(200, {'Content-Type': 'image/png'} );
 				res.end(filedata);
 			}else if (restUrl.format.indexOf('jpg')>=0){
@@ -40,7 +46,10 @@ StaticFilesController.prototype.handle = function(restUrl,res){
 			}else if (restUrl.format.indexOf('txt')>=0) {
 				res.writeHead(200, {'Content-Type': 'text/plain'} );
 				res.end(filedata.toString('UTF-8'));
-			}else
+			}else if (restUrl.format.indexOf('ico')>=0) {
+				res.writeHead(200, {'Content-Type': 'image/x-icon'} );
+				res.end(filedata.toString('UTF-8'));
+            }else
 				returnErr(res,"Unsupported file type: '"+restUrl.format+"'")			
 		}else
 			returnErr(res,"Error reading file '"+filename+"': "+err);

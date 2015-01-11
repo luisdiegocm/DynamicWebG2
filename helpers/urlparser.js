@@ -52,10 +52,10 @@ UrlParser.prototype.parseUrlData = function(){
 	// /intern/admin/song/create.json?lan=ge==de&title=Paperback%20Writer&token=33
 	var posLastSlash= this.url.lastIndexOf("/")
 	pathAndResource=this.url.substring(0,posLastSlash)
-	console.log("!! DEBUG:",pathAndResource)
+	//console.log("!! DEBUG:",pathAndResource)
 	parts = pathAndResource.split("/") 		// [ '' , intern , admin , song ]
 	if (parts.length>1) parts.shift() 		// we remove the first empty ""
-	console.log("!! DEBUG:",parts)
+	//console.log("!! DEBUG:",parts)
 	this.resource = parts.pop()			 	// song		
 	this.relPath= parts.join("/")			// intern/admin
 	this.path = parts						// | intern , admin ]	

@@ -1,14 +1,19 @@
+//Modules
 fs=require("fs")
+
+//Initialize the object
 var PageView = function(){
-	console.log("DEBUG SongView initialise...")
+	console.log("The Page_View has been initialized")
+    //Create the variables of all the HTML layouts and pages
 	this.layout="view/layout.html"
 	this.welcome_template	="view/page/welcome_template.html"
 	this.about_template		="view/page/about_template.html"
-	this.login_template 	='view/page/login.html'
+	//this.login_template 	='view/page/login.html'
 	this.notfound_template	="view/page/notfound_template.html"
 }
 
 PageView.prototype.formatHtml = function(res,restUrl,data,htmlTemplate){
+    //The var with the template and the content
 	var result = htmlTemplate
 		
 	// TODO smarter replacement
@@ -24,8 +29,10 @@ PageView.prototype.formatHtml = function(res,restUrl,data,htmlTemplate){
 }
 
 PageView.prototype.getDetailTemplate = function(pageView, res,restUrl,data,layoutHtml){
+    //Retrieve the format of the replaced layout.
 	var format = restUrl.format
-	if (restUrl.id=="welcome"){
+    //Switch the id of the URL to see which page is
+	if (restUrl.id=="index"){
 		var filenameDetailTemplate = this.welcome_template	
 	}else if (restUrl.id=="about"){
 		var filenameDetailTemplate = this.about_template
@@ -34,11 +41,14 @@ PageView.prototype.getDetailTemplate = function(pageView, res,restUrl,data,layou
 	}else{
 		var filenameDetailTemplate = this.notfound_template		
 	}
+    
 	console.log("Template for Details: '"+filenameDetailTemplate+"'");
 	// put it into the layout
 	fs.readFile(filenameDetailTemplate,function(err, layoutdata){ 
 		if (err === null ){
+            //Create a String of the URL
 			var templateDetail= layoutdata.toString('UTF-8')
+            //Replace the {CONTENTS} space with the String URL
 			htmlTemplate = layoutHtml.replace("{CONTENTS}",templateDetail)
 			pageView.formatHtml(res,restUrl,data,htmlTemplate);
 		}else
@@ -46,12 +56,16 @@ PageView.prototype.getDetailTemplate = function(pageView, res,restUrl,data,layou
 	});
 }
 	
+//Call from .render(), it is in charge of getting the LAYOUT HTML to then use it
 PageView.prototype.getOverallLayout = function(pageView, res,restUrl,data){
+    //Create the variable for the layout of the pageView
 	var filenameLayout=this.layout	
-	console.log("DEBUG PageView render in format HTML with template '"+filenameLayout+"'")
+	console.log("Template '"+filenameLayout+"'")
 	var returnErr = this.returnErr
+    //Read the layout to retrieve it
 	fs.readFile(filenameLayout,function(err, filedata){ // async read data (from fs/db)
 		if (err === null ){
+            //Create a string with the HTML of the Layout
 			var layoutHtml= filedata.toString('UTF-8')
 			console.log("DEBUG PageView HTML Layout '"+layoutHtml+"'")
 			pageView.getDetailTemplate(pageView,res,restUrl,data,layoutHtml)
@@ -59,6 +73,8 @@ PageView.prototype.getOverallLayout = function(pageView, res,restUrl,data){
 			returnErr(res,"Error reading global layout-template file '"+filenameLayout+"'. Error "+err);
 	})
 }
+
+//Call from Page_Controller
 PageView.prototype.render = function(res,restUrl ,data){
 	var pageView = this // we save the reference/pointer to this object
 	this.getOverallLayout(pageView, res,restUrl)

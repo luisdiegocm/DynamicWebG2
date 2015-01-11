@@ -12,7 +12,7 @@ function Session(id,params){
 }
 Session.prototype.newId=function(){
 	globalSessionIdCounter++
-	return globalSessionIdCounter + "_"+new Date()
+	return globalSessionIdCounter + "_"+new Date().getTime().toString()
 }
 Session.prototype.incHitCounter=function(){
 	this.hits++
