@@ -39,4 +39,4 @@ c3) Test (with curl client) or
 	
 try it in the browser and open URL:
 	
-http://localhost:1337
+http://localhost:8888
