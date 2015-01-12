@@ -10,7 +10,7 @@ var redis = require("redis")
 //Initialize class
 var JourneyData = function(){
 	
-    console.log("DEBUG SongData initialisation. We setup the db-connection.")
+    console.log("DEBUG JourneyData initialisation. We setup the db-connection.")
 	this.db = redis.createClient(6379,"127.0.0.1")
     
 }
@@ -100,14 +100,11 @@ JourneyData.prototype.findAll = function(theView,res,restUrl, filter){
 JourneyData.prototype.deleteById = function(theView,res,restUrl){
 	console.log("DEBUG Journey delete journey by id '"+restUrl.id+"'...")
 	var returnErr = this.returnErr
-    
-    var db = new sqlite3.Database('../database/myjourney.db');
-	
-    db.run("DELETE FROM JOURNEY WHERE ID="+restUrl.id.toString(),function(err, data){ // async read data (from db)
+	this.db.hdel("journey",restUrl.id,function(err, data){ // async read data (from db)
 		if (err === null ){
 			console.log(" DEL: we got from the database raw data '"+data+"'");
-			if (data>0) //0 for error, 1 for success
-				theView.render(res,restUrl,{status:'SUCCESS',message:"we deleted journey with id "+restUrl.id}) // call view with the data-item
+			if (data>0) // hdel: 0 for error, 1 for success
+				theView.render(res,restUrl,{status:'SUCCESS',message:"we deleted Journey with id "+restUrl.id}) // call view with the data-item
 			else
 				returnErr(res,"Delete-Error: Journey with id '"+restUrl.id+"' not found.")
 		}else
@@ -122,13 +119,12 @@ JourneyData.prototype.deleteById = function(theView,res,restUrl){
 JourneyData.prototype.findById = function(theView,res,restUrl){
 	console.log("DEBUG Journey find journey by id '"+restUrl.id+"'...")
 	var returnErr = this.returnErr
-    var db = new sqlite3.Database('../database/myjourney.db');
-	db.all("SELECT * FROM JOURNEY WHERE ID="+restUrl.id.toString(),function(err, data){ // async read data (from db)
+	this.db.hget("journey",restUrl.id,function(err, data){ // async read data (from db)
 		if (err === null ){
 			console.log(" we got for Journey id='"+restUrl.id+"' raw db data '"+data+"'");
 			if (data){
 				var journey= JSON.parse( data.toString('UTF-8') )
-				console.log(" => journey with id "+restUrl.id+":",journey);
+				console.log(" => Journey with id "+restUrl.id+":",journey);
 				theView.render(res,restUrl,journey) // call view with the data-item				
 			}else{
 				returnErr(res,"Journey with id '"+restUrl.id+"' not found.")				
@@ -142,18 +138,16 @@ JourneyData.prototype.findById = function(theView,res,restUrl){
 //
 // update (=replace) a song with a given id
 //
-JourneyData.prototype.persistById = function(theView,res,restUrl,song){
-    console.log("UPDATE JOURNEY: NOT YET IMPLEMENTED")
-    /*
-	console.log("DEBUG SongData store/persist songs by id '"+restUrl.id+"'...")
-	var returnErr = this.returnErr
-	this.db.hset("song",restUrl.id,JSON.stringify(song), function(err, data){ // async read data (from db)
+JourneyData.prototype.persistById = function(theView,res,restUrl,journey){
+    console.log("DEBUG JourneyDate store/persist journeys by id '"+restUrl.id+"'...")
+    var returnErr = this.returnErr
+	this.db.hset("journey",restUrl.id,JSON.stringify(journey), function(err, data){ // async read data (from db)
 		if (err === null ){
-			console.log(" we saved the song to the database.");
-			theView.render(res,restUrl,song) // call view with the data-item
+			console.log(" we saved the Journey to the database.");
+			theView.render(res,restUrl,journey) // call view with the data-item
 		}else
 			returnErr(res,"Error reading database: "+err);
-	}); */
+	}); 
 }
 
 
