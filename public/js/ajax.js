@@ -12,27 +12,27 @@ window.onload = function()
 }
 
 // helper method: format a single song...
-function songToHTML(){
-	var aLineOfHtmlForTheSong = "<li id=\""+song.id+"\">"
+function journeyToHTML(){
+	var JourneyHtml = "<li id=\""+journey.id+"\">"
 	//aLineOfHtmlForTheSong += "<form>id="+song.id+":" // better hide the id from the user
-	aLineOfHtmlForTheSong += "<input id=\"song_"+song.id+"_title\" type=\"text\" value=\""+song.title+"\" >"
-	aLineOfHtmlForTheSong += " by "
-	aLineOfHtmlForTheSong += "<input id=\"song_"+song.id+"_artist\" type=\"text\" value=\""+song.artist+"\" >"
-	aLineOfHtmlForTheSong += "<button id=\"putButton_"+song.id+"\" >Update</button>"
-	aLineOfHtmlForTheSong += "<button id=\"deleteButton_"+song.id+"\" title=\"Delete the song "+song.title+"...\">Delete</button>"
-	aLineOfHtmlForTheSong += "<button id=\"getButton_"+song.id+"\">Refresh</button>"
+	JourneyHtml += "<input id=\"journey_"+journey.id+"_name\" type=\"text\" value=\""+journey.name+"\" >"
+	JourneyHtml += ": "
+	JourneyHtml += "<input id=\"journey_"+journey.id+"_country\" type=\"text\" value=\""+journey.country+"\" >"
+	JourneyHtml += "<button id=\"putButton_"+journey.id+"\" >Update</button>"
+	JourneyHtml += "<button id=\"deleteButton_"+journey.id+"\" title=\"Delete the Journey "+journey.title+"...\">Delete</button>"
+	JourneyHtml += "<button id=\"getButton_"+journey.id+"\">Refresh</button>"
 	//aLineOfHtmlForTheSong += "</form>"
-	aLineOfHtmlForTheSong += "</li>"
-	return aLineOfHtmlForTheSong
+	JourneyHtml += "</li>"
+	return JourneyHtml
 }
 
-function setJavaScriptActionsForButtons(songs){
-	for (var j in songs){
-		var curr_song=songs[j]
-		console.log("curr-song: ", curr_song)
-		document.getElementById('putButton_'+curr_song.id).setAttribute(	'onClick',"javascript:ajaxCall(\"update\","+curr_song.id+")")	
-		document.getElementById('deleteButton_'+curr_song.id).setAttribute(	'onClick',"javascript:ajaxCall(\"delete\","+curr_song.id+")")	
-		document.getElementById('getButton_'+curr_song.id).setAttribute(	'onClick',"javascript:ajaxCall(\"refresh\","+curr_song.id+")")
+function setJavaScriptActionsForButtons(journeys){
+	for (var j in journeys){
+		var curr_journey=journeys[j]
+		console.log("curr-journey: ", curr_journey)
+		document.getElementById('putButton_'+curr_journey.id).setAttribute(	'onClick',"javascript:ajaxCall(\"update\","+curr_journey.id+")")	
+		document.getElementById('deleteButton_'+curr_journey.id).setAttribute(	'onClick',"javascript:ajaxCall(\"delete\","+curr_journey.id+")")	
+		document.getElementById('getButton_'+curr_journey.id).setAttribute(	'onClick',"javascript:ajaxCall(\"refresh\","+curr_journey.id+")")
 	}
 }
 
@@ -43,15 +43,15 @@ function debug(msg){
 // for search, loadAll, create we update the list
 function updateTheList(xmlhttp,action){
 	try {
-		songs=JSON.parse(xmlhttp.responseText)
-		if (songs instanceof Array){
-			songsHTML="";
-			for (var i in songs){
-				song=songs[i]
-				songsHTML += songToHTML(song)
+		journeys=JSON.parse(xmlhttp.responseText)
+		if (journey instanceof Array){
+			journeyHTML="";
+			for (var i in journeys){
+				journey=journeys[i]
+				journeyHTML += journeyToHTML(journey)
 			}
-			document.getElementById('listOfJourneys').innerHTML=songsHTML;
-			setJavaScriptActionsForButtons(songs)	
+			document.getElementById('listOfJourneys').innerHTML=journeyHTML;
+			setJavaScriptActionsForButtons(journeys)	
 			debug("INFO: for "+action+" we got: '"+xmlhttp.responseText+"': ");
 		}else{
 			debug("Error: for "+action+" we did not get a list??: '"+xmlhttp.responseText+"': ");
@@ -63,10 +63,14 @@ function updateTheList(xmlhttp,action){
 }
 // for update, refresh we update the current item only
 function updateSingleItem(xmlhttp,action){
-	song=JSON.parse(xmlhttp.responseText)	
-	debug("INFO: for "+action+" we got: '"+xmlhttp.responseText+"': ",song);
-	document.getElementById('song_'+song.id+'_title').value = song.title
-	document.getElementById('song_'+song.id+'_artist').value = song.artist
+	journey=JSON.parse(xmlhttp.responseText)	
+	debug("INFO: for "+action+" we got: '"+xmlhttp.responseText+"': ",journey);
+	document.getElementById('journey_'+journey.id+'_name').value = journey.name
+	document.getElementById('journey_'+journey.id+'_start').value = journey.start
+    document.getElementById('journey_'+journey.id+'_end').value = journey.end
+    document.getElementById('journey_'+journey.id+'_country').value = journey.country
+    document.getElementById('journey_'+journey.id+'_summary').value = journey.summary
+    document.getElementById('journey_'+journey.id+'_image').value = journey.image
 }
 
 
@@ -80,7 +84,6 @@ function updateThePageWithNewData(xmlhttp,action){
 	}else{ // update a single line (a single song)
 		updateSingleItem(xmlhttp,action)
 	}
-
 }
 
 function ajaxCall(action,id){
@@ -105,18 +108,22 @@ function ajaxCall(action,id){
         var summary =encodeURIComponent(document.getElementById('newjourney_summary').value)
 		var image=encodeURIComponent(document.getElementById('newjourney_image').value)
 		url="create.json?name=" + name + "&start=" + start + "&end=" + end + "&country=" + country + "&summary=" + summary + "&image=" + image;
-		xmlhttp.open('post',url,true);
+		xmlhttp.open('POST',url,true);
 	}else if (action=="update"){
-		var title =encodeURIComponent(document.getElementById('song_'+id+'_title').value)
-		var artist=encodeURIComponent(document.getElementById('song_'+id+'_artist').value)
-		url=id+".json?title=" + title + "&artist=" + artist
-		xmlhttp.open('put',url,true);		
+        var name =encodeURIComponent(document.getElementById('journey_'+id+'_name').value)
+		var start=encodeURIComponent(document.getElementById('journey_'+id+'_start').value)
+        var end =encodeURIComponent(document.getElementById('journey_'+id+'_end').value)
+		var country=encodeURIComponent(document.getElementById('journey_'+id+'_country').value)
+        var summary =encodeURIComponent(document.getElementById('journey_'+id+'_summary').value)
+		var image=encodeURIComponent(document.getElementById('journey_'+id+'_image').value)
+		url=id+".json?name=" + name + "&start=" + start + "&end=" + end + "&country=" + country + "&summary=" + summary + "&image=" + image;
+		xmlhttp.open('PUT',url,true);		
 	}else if (action=="delete"){
 		url=id+".json" 
-		xmlhttp.open('delete',url,true);
+		xmlhttp.open('DELETE',url,true);
 	}else if (action=="refresh"){
 		url=id+".json"
-		xmlhttp.open('get',url,true);
+		xmlhttp.open('GET',url,true);
 	}else{
 		debug("Error: action '"+action+"' unknown!");
 		return;
@@ -134,7 +141,6 @@ function ajaxCall(action,id){
   	}
 
 	xmlhttp.send();
-
     
 }
 

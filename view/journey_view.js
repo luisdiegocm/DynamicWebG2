@@ -29,12 +29,14 @@ JourneyView.prototype.formatHtml = function(res,restUrl,data,htmlTemplate){
 			
 	}else{ // a single song:
 		// TODO smarter replacement
-		if (data && data.title)
-			result=result.replace(/{NAME}/g,data.name ) 
-						 .replace(/{START}/g,data.start ) 
-						 .replace(/{SONGID}/g,data.id)
-						 .replace(/{COUNTER}/g,7 ) // TODO add more data :)		
-		
+		if (data && data.name)
+            console.log(result);
+			result=result.replace(/{NAME}/g,data.name) 
+						 .replace(/{START}/g,data.start)
+                         .replace(/img src=''/g,"img src='"+data.image+"' ")
+            
+            //var preview = document.querySelector('img'); //selects the query named img
+            //preview.src = data.image;
 	}
 			
 	// send html data back to client	
