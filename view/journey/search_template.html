@@ -1,0 +1,37 @@
+<h1>Song-Management:</h1>
+
+	<div>
+		<label for="searchterm" >Journey Search:</label>
+		<input id="searchterm" type="text"  value="" maxlength="50"  tabindex="-1"/>
+		<button id="searchButton">Search</button>
+	</div>
+
+	<button id="getAllButton">Refresh List</button>
+	<div id="listOfJourneys">
+	a list of (filtered journeys should appear here...)
+	</div>
+	
+	Add a New Journey 
+	<label for="newjourney_name" >Name:</label>
+	<input id="newjourney_name" type="text"  value="" maxlength="50"  tabindex="-1"/>
+	<label for="newjourney_start" >Start:</label>
+	<input id="newjourney_start" type="text"  value="" maxlength="50"  tabindex="-1"/>
+    <label for="newjourney_end" >End:</label>
+	<input id="newjourney_end" type="text"  value="" maxlength="50"  tabindex="-1"/>
+    <label for="newjourney_country" >Country:</label>
+	<input id="newjourney_country" type="text"  value="" maxlength="50"  tabindex="-1"/>
+    <label for="newjourney_summary" >Summary:</label>
+	<input id="newjourney_summary" type="text"  value="" maxlength="50"  tabindex="-1"/>
+    
+    <label for="newjourney_image" >Image:</label>
+    <input id = "newjourney_image" type="file" onchange="previewFile()"><br>
+    <img src="" height="200" alt="Image preview.">
+
+	<button id="postButton">Create Journey</button>
+	
+<hr/>
+	<small>
+	DEBUG:<div id="message" />
+	</small>
+<hr/>
+	

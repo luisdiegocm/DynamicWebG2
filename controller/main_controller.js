@@ -86,10 +86,10 @@ var restRouting = function(req,res,restUrl){
           var staticFileController = require('./static_controller')
           staticFileController.handle(restUrl,res)
           break;
-	/*case 'song':
-  		var songController = require('./song_controller')
-		songController.handle(restUrl,res)
-		break;*/
+	case 'journey':
+  		var journeyController = require('./journey_controller')
+		journeyController.handle(restUrl,res)
+		break;
 	case 'page':
   		var pageController = require('./page_controller')
 		pageController.handle(restUrl,res)

@@ -20,7 +20,7 @@ module.exports = {
 		if (restUrl.resource == "public") 		 controllerString = 'static'
 		if (restUrl.filename == "index.html" )   controllerString = 'page'
 			
-		//if (restUrl.resource == "song") 		 controllerString = 'song'
+		if (restUrl.resource == "journey") 		 controllerString = 'journey'
 			
 		if (restUrl.resource == "page") 		 controllerString = 'page'
 			
