@@ -3,7 +3,7 @@ INSTALL.txt
 
 Welcome to MyJourney install process
 
-The WebApp is for WINDOWS OS.
+The WebApp is for WINDOWS OS
 
 Before you can run this app 
 
