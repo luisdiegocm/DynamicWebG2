@@ -6,10 +6,12 @@ window.onload = function()
 	
 	// set jsc-action for CRUD-functions: create-read-update-delete a SINGLE song
 	document.getElementById('postButton').onclick   = function(){ajaxCall("create");};	// create
-
+    
 	 // refresh the list on startup	
 	ajaxCall("loadAll");
 }
+
+
 
 // helper method: format a single song...
 function journeyToHTML(){
@@ -90,6 +92,11 @@ function ajaxCall(action,id){
 	debug("Button-Click: action="+action+" for id="+id)
 	var xmlhttp;
 	xmlhttp=new XMLHttpRequest();
+    if (confirm('Are you sure you want to save this thing into the database?')) {
+    // Save it!
+    } else {
+        // Do nothing!
+    }
 		
 	if (action=="search"){
 		var searchTerm = encodeURIComponent(document.getElementById('searchterm').value)
