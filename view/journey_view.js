@@ -65,7 +65,7 @@ JourneyView.prototype.getDetailTemplate = function(journeyView, res,restUrl,data
 			var htmlTemplate = layoutHtml.replace("{CONTENTS}",templateDetail)
 			journeyView.formatHtml(res,restUrl,data,htmlTemplate);
 		}else
-			returnErr(res,"Error reading detail-template file '"+filenameDetailTemplate+"' for songs: "+err);
+			returnErr(res,"Error reading detail-template file '"+filenameDetailTemplate+"' for journeys: "+err);
 	});
 }
 	
@@ -107,8 +107,6 @@ JourneyView.prototype.render = function(res,restUrl ,data){
 	}
 }
 
-
-// Some helpers:
 
 // JSON render Not-Implemented Error on data-loading
 JourneyView.prototype.renderNotImplemented = function(res,restUrl,data){

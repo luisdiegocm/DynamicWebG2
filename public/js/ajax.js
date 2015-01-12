@@ -44,33 +44,33 @@ function debug(msg){
 function updateTheList(xmlhttp,action){
 	try {
 		journeys=JSON.parse(xmlhttp.responseText)
-		if (journey instanceof Array){
-			journeyHTML="";
+		if (journeys instanceof Array){
+			journeysHTML="";
 			for (var i in journeys){
 				journey=journeys[i]
-				journeyHTML += journeyToHTML(journey)
+				journeysHTML += journeyToHTML(journey)
 			}
-			document.getElementById('listOfJourneys').innerHTML=journeyHTML;
+			document.getElementById('listOfJourneys').innerHTML=journeysHTML;
 			setJavaScriptActionsForButtons(journeys)	
 			debug("INFO: for "+action+" we got: '"+xmlhttp.responseText+"': ");
 		}else{
-			debug("Error: for "+action+" we did not get a list??: '"+xmlhttp.responseText+"': ");
+			debug("ERROR: for "+action+" we did not get a list??: '"+xmlhttp.responseText+"': ");
 		}
 	}catch(err) {
-		debug("Error: for "+action+" we got: '"+xmlhttp.responseText+"': "+err);
+		debug("ERROR: for "+action+" we got: '"+xmlhttp.responseText+"': "+err);//
 	}
 	
 }
 // for update, refresh we update the current item only
 function updateSingleItem(xmlhttp,action){
-	journey=JSON.parse(xmlhttp.responseText)	
+	var journey=JSON.parse(xmlhttp.responseText);
 	debug("INFO: for "+action+" we got: '"+xmlhttp.responseText+"': ",journey);
-	document.getElementById('journey_'+journey.id+'_name').value = journey.name
-	document.getElementById('journey_'+journey.id+'_start').value = journey.start
-    document.getElementById('journey_'+journey.id+'_end').value = journey.end
-    document.getElementById('journey_'+journey.id+'_country').value = journey.country
-    document.getElementById('journey_'+journey.id+'_summary').value = journey.summary
-    document.getElementById('journey_'+journey.id+'_image').value = journey.image
+	document.getElementById('journey_'+journey.id+'_name').value = journey.name;
+	document.getElementById('journey_'+journey.id+'_start').value = journey.start;
+    document.getElementById('journey_'+journey.id+'_end').value = journey.end;
+    document.getElementById('journey_'+journey.id+'_country').value = journey.country;
+    document.getElementById('journey_'+journey.id+'_summary').value = journey.summary;
+    document.getElementById('journey_'+journey.id+'_image').value = journey.image;
 }
 
 
@@ -94,11 +94,11 @@ function ajaxCall(action,id){
 	if (action=="search"){
 		var searchTerm = encodeURIComponent(document.getElementById('searchterm').value)
 		url="search.json?searchterm=" + searchTerm
-		xmlhttp.open('get',url,true);
+		xmlhttp.open('GET',url,true);
         
 	}else if (action=="loadAll"){
 		url="all.json"
-		xmlhttp.open('get',url,true);
+		xmlhttp.open('GET',url,true);
         
 	}else if (action=="create"){
 		var name =encodeURIComponent(document.getElementById('newjourney_name').value)
