@@ -1,0 +1,56 @@
+<h2>Add new Journey</h2>	
+
+<table>
+        <tr>
+            <td>
+            Name
+            </td>
+            <td>
+                <input id="newjourney_name" type="text"  value="" maxlength="50"  tabindex="-1"/>
+            </td>
+        </tr>
+        <tr>
+            <td>
+            Start
+            </td>
+            <td>
+                <input id="newjourney_start" type="date"  value="" maxlength="50"  tabindex="-1"/>
+            </td>
+        </tr>
+        <tr>
+            <td>
+            End
+            </td>
+            <td>
+                <input id="newjourney_end" type="date"  value="" maxlength="50"  tabindex="-1"/>
+            </td>
+        </tr>
+        <tr>
+            <td>
+            Country
+            </td>
+            <td>
+                <input id="newjourney_country" type="text"  value="" maxlength="50"  tabindex="-1"/>
+            </td>
+        </tr>
+        <tr>
+            <td>
+            Summary
+            </td>
+            <td>
+                <textarea id="newjourney_summary" rows="10" cols="50"></textarea>
+            </td>
+        </tr>
+        <tr>
+            <td>
+            Image
+            </td>
+            <td>
+                <input id = "newjourney_image" type="file" onchange="previewFile()"><br></div>
+                <div><img src='' height="100" alt="Image preview."></div>
+            </td>
+        </tr>
+</table>
+
+<button id="addJourney">Add Journey</button>
+<button id="clearJourney">Clear</button>

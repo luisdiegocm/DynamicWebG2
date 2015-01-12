@@ -55,8 +55,4 @@ function writeDate(){
     date = date + ", " + year
 
     document.getElementById("idDate").innerHTML = "<h4>"+date+"</h4>";
-    
-    document.getElementById('searchButton').innerHTML = "NADA";
 }
-
-writeDate();
