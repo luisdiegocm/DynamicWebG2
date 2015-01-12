@@ -1,8 +1,7 @@
 {
 	"name": 		"MyJourney",
-	"version": 		"0", 
 	"dependencies":	{
 		"nodemailer": ">0.1",
-        "sqlite3": "~2.2.3"
+        "redis": "0.12.1"
 	}
 }

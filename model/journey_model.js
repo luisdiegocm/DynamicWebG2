@@ -1,7 +1,7 @@
 "use strict"
 	
-var Journey = function(name,start,end,country,summary,image){
-	this.id=null
+var Journey = function(id,name,start,end,country,summary,image){
+	this.id=id
 	this.name=name
 	this.start=start
     this.end = end

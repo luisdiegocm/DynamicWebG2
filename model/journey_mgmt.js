@@ -1,51 +1,20 @@
 "use strict"
 //FileSystem module
 var fs = require('fs')
-//SQLite module
-var sqlite = require("sqlite3").verbose();
 //Model module
 var Journey = require("../model/journey_model")
+
+// npm install redis
+var redis = require("redis")
+
 //Initialize class
 var JourneyData = function(){
-	console.log("DEBUG Journey initialisation. We setup the db-connection.")
-	func();
-    /*db.serialize(function() {
-
-            //db.run("CREATE TABLE if not exists JOURNEY (id integer primary key autoincrement, name text not null, start text not null, end text not null, country text not null,summary text not null, image blob)");
-            db.run("CREATE TABLE if not exists JOURNEY (id integer primary key autoincrement)");
-
-    });
-
-        db.run("INSERT INTO JOURNEY (name,start,end,country,summary,image) values ('Hungria','3','5','Hungria','Nada',null)");
-    
-        db.each("SELECT * FROM JOURNEY", function(err, row) {
-              console.log(row.id + ": " + row.name);
-          });
-    db.close();*/
+	
+    console.log("DEBUG SongData initialisation. We setup the db-connection.")
+	this.db = redis.createClient(6379,"127.0.0.1")
     
 }
 
-var func =function(){
-    console.log("me cago")
-    var sqlite3 = require('sqlite3').verbose();
-    var db = new sqlite3.Database('mydb.db');
-    db['open'] = true;
-    console.log(db);
-    
-    var check;
-      db.run("CREATE TABLE if not exists user_info (info TEXT)");
-      var stmt = db.prepare("INSERT INTO user_info VALUES (?)");
-      for (var i = 0; i < 10; i++) {
-          stmt.run("Ipsum " + i);
-      }
-      stmt.finalize();
-
-      db.each("SELECT rowid AS id, info FROM user_info", function(err, row) {
-          console.log(row.id + ": " + row.info);
-      });
-    db.run("COMMIT");
-    db.close();
-}
 //Create a new Journey
 JourneyData.prototype.create = function(theView,res,restUrl){
 	var returnErr = this.returnErr
@@ -68,18 +37,20 @@ JourneyData.prototype.create = function(theView,res,restUrl){
 	var summary=restUrl.params['summary'] || "post/get param summary unknonw"
     var image=restUrl.params['image'] || "post/get param image unknonw"
 
-    var db = new sqlite.Database('../database/myjourney.db');
-    var journey = new Journey(name,start,end,country,summary,image);
-    console.log("DEBUG Journey create a new journey with name='"+name);
-    var sqlQuery = "INSERT INTO Journey(name,start,end,country,summary,image) values ("+name+","+start+","+end+","+country+","+summary+","+image+")";
-    db.run(sqlQuery, function(err, data){ // async read data (from db)
+    var db = this.db
+	db.incr("SEQUENCE_ID",function(err,data){ //Unique ID
+	  var idNext=data
+	  console.log("for increase SEQUENCE_ID we got: ",idNext)
+      var journey = new Journey(idNext,name,start,end,country,summary,image);
+	  console.log("DEBUG JourneyData create a new journey with name='"+name+": ",journey)
+	  db.hset("journey",journey.id,JSON.stringify(journey), function(err, data){ // async read data (from db)
 		if (err === null ){
-			db.all('SELECT * FROM JOURNEY',function(err,rows){
-				console.log("DEBUG: the rows: ",rows)
+			db.hgetall('journey',function(err,data){
+				console.log("DEBUG: all journeys as raw data:",data)
 				var journeys=[]
-				for (var i in rows){
-					console.log("DEBUG: a journey:",i )
-					journeys.push(i)
+				for (var i in data){
+					console.log("DEBUG: a journey:",i, data[i] )
+					journeys.push( JSON.parse( data[i] ) )	
 				}
 				console.log("DEBUG: all journeys:",journeys)
 				gotDataCallbackFunction( err, journeys )
@@ -89,6 +60,7 @@ JourneyData.prototype.create = function(theView,res,restUrl){
 			returnErr(res,"Error creating new journey: "+err);
 		}
 	  });
+    })
 }
 
 //
@@ -105,14 +77,15 @@ JourneyData.prototype.findAll = function(theView,res,restUrl, filter){
 		}else
 			returnErr(res,"Error reading file: "+err);
 	}	
-    var db = new sqlite.Database('../database/myjourney.db');
-	db.all('SELECT * FROM JOURNEY',function(err,data){
+    
+    this.db.hgetall('journey',function(err,data){
 		console.log("DEBUG: all journeys as raw data:",data)
+		//console.log("DEBUG: songs['2']:",JSON.parse(data['2']).title )
 		var journeys=[]
 		for (var i in data){
-			console.log("DEBUG: a journey:",i)
-			var newJourney=i
-			// we make a song out of this object :)
+			console.log("DEBUG: a journey:",i, data[i] )
+			var newJourney=JSON.parse( data[i] )
+
 			newJourney.__proto__ = Journey.prototype; 
 			if ( newJourney.fulfillsSearchCriteria(filter) ){
 				journeys.push( newJourney )					
@@ -128,7 +101,7 @@ JourneyData.prototype.deleteById = function(theView,res,restUrl){
 	console.log("DEBUG Journey delete journey by id '"+restUrl.id+"'...")
 	var returnErr = this.returnErr
     
-    var db = new sqlite.Database('../database/myjourney.db');
+    var db = new sqlite3.Database('../database/myjourney.db');
 	
     db.run("DELETE FROM JOURNEY WHERE ID="+restUrl.id.toString(),function(err, data){ // async read data (from db)
 		if (err === null ){
@@ -149,7 +122,7 @@ JourneyData.prototype.deleteById = function(theView,res,restUrl){
 JourneyData.prototype.findById = function(theView,res,restUrl){
 	console.log("DEBUG Journey find journey by id '"+restUrl.id+"'...")
 	var returnErr = this.returnErr
-    var db = new sqlite.Database('../database/myjourney.db');
+    var db = new sqlite3.Database('../database/myjourney.db');
 	db.all("SELECT * FROM JOURNEY WHERE ID="+restUrl.id.toString(),function(err, data){ // async read data (from db)
 		if (err === null ){
 			console.log(" we got for Journey id='"+restUrl.id+"' raw db data '"+data+"'");

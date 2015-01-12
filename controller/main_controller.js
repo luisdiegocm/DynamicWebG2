@@ -11,9 +11,6 @@ var up = require('../helpers/urlparser')
 var routes = require('./routes')
 var sessMgmt = require('../model/session_mgmt')
 
-//SQLite Object
-var sqlite = require('sqlite3').verbose();
-
 //Set the PORT if receive as an argument
 config.port = process.argv[2] || 8888;
 
