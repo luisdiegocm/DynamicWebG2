@@ -27,7 +27,7 @@ JourneyData.prototype.create = function(theView,res,restUrl){
 			returnErr(res,"Error with database: "+err);
 	}	
 
-	console.log("DEBUG Journey store/persist journey by id '"+restUrl.id+"'...")
+	console.log("DEBUG Journey store journey by id '"+restUrl.id+"'...")
 	var returnErr = this.returnErr
     
 	var name=restUrl.params['name'] || "post/get param name unknown"

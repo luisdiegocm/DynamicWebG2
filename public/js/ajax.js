@@ -50,7 +50,7 @@ function updateTheList(xmlhttp,action){
 				song=songs[i]
 				songsHTML += songToHTML(song)
 			}
-			document.getElementById('listOfSongs').innerHTML=songsHTML;
+			document.getElementById('listOfJourneys').innerHTML=songsHTML;
 			setJavaScriptActionsForButtons(songs)	
 			debug("INFO: for "+action+" we got: '"+xmlhttp.responseText+"': ");
 		}else{
@@ -83,8 +83,7 @@ function updateThePageWithNewData(xmlhttp,action){
 
 }
 
-function ajaxCall(action,id) // for thed list
-{
+function ajaxCall(action,id){
 	debug("Button-Click: action="+action+" for id="+id)
 	var xmlhttp;
 	xmlhttp=new XMLHttpRequest();
@@ -93,13 +92,19 @@ function ajaxCall(action,id) // for thed list
 		var searchTerm = encodeURIComponent(document.getElementById('searchterm').value)
 		url="search.json?searchterm=" + searchTerm
 		xmlhttp.open('get',url,true);
+        
 	}else if (action=="loadAll"){
 		url="all.json"
 		xmlhttp.open('get',url,true);
+        
 	}else if (action=="create"){
-		var title =encodeURIComponent(document.getElementById('newsong_title').value)
-		var artist=encodeURIComponent(document.getElementById('newsong_artist').value)
-		url="create.json?title=" + title + "&artist=" + artist
+		var name =encodeURIComponent(document.getElementById('newjourney_name').value)
+		var start=encodeURIComponent(document.getElementById('newjourney_start').value)
+        var end =encodeURIComponent(document.getElementById('newjourney_end').value)
+		var country=encodeURIComponent(document.getElementById('newjourney_country').value)
+        var summary =encodeURIComponent(document.getElementById('newjourney_summary').value)
+		var image=encodeURIComponent(document.getElementById('newjourney_image').value)
+		url="create.json?name=" + name + "&start=" + start + "&end=" + end + "&country=" + country + "&summary=" + summary + "&image=" + image;
 		xmlhttp.open('post',url,true);
 	}else if (action=="update"){
 		var title =encodeURIComponent(document.getElementById('song_'+id+'_title').value)
@@ -130,4 +135,22 @@ function ajaxCall(action,id) // for thed list
 
 	xmlhttp.send();
 
+    
+}
+
+function previewFile(){
+       var preview = document.querySelector('img'); //selects the query named img
+       var file    = document.querySelector('input[type=file]').files[0]; //sames as here
+       var reader  = new FileReader();
+
+       reader.onloadend = function () {
+           preview.src = reader.result;
+           console.log(reader.result);
+       }
+
+       if (file) {
+           reader.readAsDataURL(file); //reads the data as a URL
+       } else {
+           preview.src = "";
+       }
 }

@@ -15,18 +15,17 @@ JourneyView.prototype.formatHtml = function(res,restUrl,data,htmlTemplate){
 		
 	if (restUrl.id=="all"){ // a list of songs
 		// TODO smarter replacement
-		var songHTML=""
-		for (var song in data){
-            console.log(song);
-            /*
-			var curr_song=data[song]
-			songHTML+= "<li>"
-			songHTML+= "<a href=\""+curr_song.id+".html\">"
-			songHTML+= curr_song.title
-			songHTML+= "</a>"
-			songHTML+= "</li>"*/
+		var journeyHTML=""
+		for (var journey in data){
+            console.log(journey);
+			var curr_journey=data[journey]
+			journeyHTML+= "<li>"
+			journeyHTML+= "<a href=\""+curr_journey.id+".html\">"
+			journeyHTML+= curr_journey.name
+			journeyHTML+= "</a>"
+			journeyHTML+= "</li>"
 		}
-		result=result.replace(/{JOURNEYS}/g,songHTML ) 
+		result=result.replace(/{JOURNEYS}/g,journeyHTML ) 
 			
 	}else{ // a single song:
 		// TODO smarter replacement
