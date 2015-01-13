@@ -1,5 +1,3 @@
-//var crypto = require('crypto');
-
 window.onload = function(){
     loadDOM();
     document.getElementById("addUser").onclick = function(){

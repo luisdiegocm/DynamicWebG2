@@ -2,6 +2,6 @@
 	"name": 		"MyJourney",
 	"dependencies":	{
 		"nodemailer": ">0.1",
-        "redis": "0.12.1"
+        "redis": "0.12.1",
 	}
 }
