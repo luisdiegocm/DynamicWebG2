@@ -22,7 +22,6 @@ JourneyController.prototype.handle = function(restUrl,res){
 	}else if (restUrl.id == "add"){
         this.journeyView.render(res,restUrl)
     }else if (restUrl.resource == "edit" && restUrl.params == {}){
-        console.log("entrea ca");
         this.journeyView.render(res,restUrl)
     }else if (restUrl.id == 'search'){
 		var searchTerm=restUrl.params['searchterm'];

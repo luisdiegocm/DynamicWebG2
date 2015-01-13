@@ -4,7 +4,11 @@ window.onload = function(){
 
 function loadDOM(){
     document.getElementById("idDate").innerHTML = "<h4>"+writeDate()+"</h4>";
-    document.getElementById("searchButton").onclick = function(){alert("hola");};
+    document.getElementById("searchButton").onclick = function(){searchJourney(document.getElementById("searchterm").value);};
+}
+
+function searchJourney(filter){
+    window.open("/journey/search.html?searchterm="+filter,"_self");   
 }
 
 function writeDate(){

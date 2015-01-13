@@ -20,7 +20,7 @@ var JourneyView = function(){
 JourneyView.prototype.formatHtml = function(res,restUrl,data,htmlTemplate){
 	var result = htmlTemplate
 		
-	if (restUrl.id=="all"){ // a list of songs
+	if (restUrl.id=="all" || restUrl.id == "search"){ // a list of songs
 		// TODO smarter replacement
 		var journeyHTML=""
         journeyHTML+="<table>";
@@ -130,7 +130,7 @@ JourneyView.prototype.getDetailTemplate = function(journeyView, res,restUrl,data
 			returnErr(res,"Error reading detail-template file '"+filenameDetailTemplate+"' for journeys: "+err);
 	});
 }
-	
+
 JourneyView.prototype.getOverallLayout = function(journeyView, res,restUrl,data){
 	var filenameLayout=this.layout	
 	//console.log("DEBUG Journey render in format HTML with template '"+filenameLayout+"'")

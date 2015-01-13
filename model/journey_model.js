@@ -21,8 +21,12 @@ Journey.prototype.fulfillsSearchCriteria = function(searchTerm){
     }
 	var included=false
     
-	if (this.name.indexOf(searchTerm) >=0) included=true 
-	if (this.country.indexOf(searchTerm) >=0) included=true 
+    var name = this.name.toLowerCase();
+    var country = this.country.toLowerCase();
+    var filter=searchTerm.toLowerCase();
+    
+	if (name.indexOf(filter) >=0) included=true 
+	if (country.indexOf(filter) >=0) included=true 
 	return included
 }
 
