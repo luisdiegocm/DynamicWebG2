@@ -23,6 +23,7 @@ UserController.prototype.handle = function(restUrl,res){
         //login auth
     }else if (restUrl.id == "confirm"){
         //confirm email
+        this.userData.confirm(this.userView,res,restUrl);
     }
 
 

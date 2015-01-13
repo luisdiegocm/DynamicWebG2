@@ -20,6 +20,42 @@ UserData.prototype.add_user = function(theView,res,restUrl){
     theView.render(res,restUrl,users);
 };
 
+
+var updateUser = function (theView,res, restUrl,user){
+    var db = redis.createClient(6379,"127.0.0.1");
+    db.hset("user",user.id,JSON.stringify(user), function(err, data){ // async read data (from db)
+        if (err === null ){
+            console.log(" we saved the User to the database.");
+            theView.render(res,restUrl,user) // call view with the data-item
+        }else
+            returnErr(res,"Error reading database: "+err);
+    }); 
+    }
+
+
+UserData.prototype.confirm = function (theView,res,restUrl){
+    var userid = restUrl.params['user_id'];
+    var keyauth = restUrl.params['auth'];
+    
+    
+    
+    this.db.hget("user", userid, function(err, data){ // async read data (from db)
+        if (err === null ){
+            if (data){
+                var user= JSON.parse(data.toString('UTF-8'));
+                if (user.keyauth == keyauth){
+                    user.confirm=1;
+                    //Function that Updates a Journey in the DB
+                    updateUser(theView,res,restUrl,user);
+                }
+            }else{
+                returnErr(res,"User with id '" + restUrl.id + "' not found.");
+            }
+        }else
+            returnErr(res,"Error reading database: "+err);
+    });
+}
+
 //Create a new user
 UserData.prototype.create = function(theView,res,restUrl){
     var returnErr = this.returnErr;
@@ -32,13 +68,11 @@ UserData.prototype.create = function(theView,res,restUrl){
             returnErr(res,"Error with database: "+err);
     };
     
-    var sendAuth = function(user_name,email){
-
-            var key = crypto.randomBytes(8).toString('hex');
+    var sendAuth = function(user_name,email,userid,key){
 
             var message = "My Journey\n\nConfirm Registration\n\nDear "+user_name+": You just register to our page. First, we need you to confirm your registration.\n\nClick to the next link for it. \n\n"
 
-            var authlink = "http://" + config.server + ":" + config.port + "/login/confirm.json?user_name=" + user_name + "&auth=" + key;
+            var authlink = "http://" + config.server + ":" + config.port + "/login/confirm.json?user_id=" + userid + "&auth=" + key;
 
             message += authlink;
 
@@ -49,32 +83,22 @@ UserData.prototype.create = function(theView,res,restUrl){
             });
 
         }
-
-    
-
     var returnErr = this.returnErr;
 
     var user_name = restUrl.params['user_name'] || "post/get param user_name unknown";
     var password  = restUrl.params['password'] || "post/get param password unknonw"; //Needs to be encrypted
     var email     = restUrl.params['email'] || "post/get param email unknonw";
-
-    var algorithm = 'aes256'; // or any other algorithm supported by OpenSSL
-    var key = 'encryptPhrase';
-    var text = password;
-
-    var cipher = crypto.createCipher(algorithm, key);
-    var encrypted = cipher.update(text, 'utf8', 'hex') + cipher.final('hex');
-    password = encrypted;
-
+    var key = crypto.randomBytes(8).toString('hex');
+    
     var db = this.db;
 
     db.incr("SEQUENCE_ID",function(err,data){ //Unique ID
         var idNext = data;
-        var user = new User(idNext,user_name, password, email);
+        var user = new User(idNext,user_name, password, email,key);
         db.hset("user", user.id, JSON.stringify(user), function(err, data){ // async read data (from db)
             if (err === null ){
                 //Not yet register, first you have to confirm
-                sendAuth(user_name,email);
+                sendAuth(user_name,email,user.id,key);
                 theView.render(res,restUrl);
             }
             else{
