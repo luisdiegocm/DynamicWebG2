@@ -19,7 +19,7 @@ function createUser(){
             if (xmlhttp.readyState == 4){
                 if (xmlhttp.status == 200){
                     // TODO: enable "relevant" buttons again
-                    alert("The User was created correctly");
+                    alert("The User was registed correctly. An email was sended to you to confirm your registration.");
                     window.open("/journey/all.html","_self");
                 }else {
                     debug("Error from the web service for action "+action+": "+xmlhttp.status+": "+xmlhttp.responseText)

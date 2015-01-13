@@ -3,6 +3,9 @@
 var fs = require('fs');
 
 var crypto = require("crypto");
+
+var config = require('../config');
+
 //Model module
 var User = require("../model/user_model");
 // npm install redis
@@ -27,6 +30,21 @@ UserData.prototype.create = function(theView,res,restUrl){
         }else
             returnErr(res,"Error with database: "+err);
     };
+    
+    var sendAuth = function(user_name,email){
+        var key = crypto.randomBytes(8).toString('hex');
+
+        var message = "My Journey\n\nConfirm Registration\n\nDear "+user_name+": You just register to our page. First, we need you to confirm your registration.\n\nClick to the next link for it. \n\n"
+
+        var authlink = "http://" + config.server + ":" + config.port + "/login/confirm.json?email=" + email + "&auth=" + key;
+
+        message += authlink;
+
+        var mail = new Mailer();
+
+        mail.sendMail(email,"MyJourney || Confirm your registration",message);
+
+    }
 
     var returnErr = this.returnErr;
 
@@ -42,9 +60,9 @@ UserData.prototype.create = function(theView,res,restUrl){
         db.hset("user", user.id, JSON.stringify(user), function(err, data){ // async read data (from db)
             if (err === null ){
                 //Not yet register, first you have to confirm
-                this.sendAuth(user_name,email);
-            });
-            }else{
+                sendAuth(user_name,email);
+            }
+            else{
                 returnErr(res,"Error creating new user: "+err);
             }
         });
@@ -56,7 +74,13 @@ UserData.prototype.sendAuth = function(user_name,email){
     
     var message = "My Journey\n\nConfirm Registration\n\nDear "+user_name+": You just register to our page. First, we need you to confirm your registration.\n\nClick to the next link for it. \n\n"
     
-    var authlink = "http://" + config.server + ":" + config.port + "/login/confirm?mail=" + uemail + "&key=" + auth_key;
+    var authlink = "http://" + config.server + ":" + config.port + "/login/confirm.json?user_name=" + user_name + "&auth=" + key;
+    
+    message += authlink;
+    
+    var mail = new Mailer();
+        
+    mail.sendMail(email,"MyJourney || Confirm your registration",message);
 
 }
 

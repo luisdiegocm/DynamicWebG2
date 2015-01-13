@@ -80,9 +80,6 @@ var restRouting = function(req,res,restUrl){
           break;
 	case 'journey':
   		var journeyController = require('./journey_controller');
-        var mail = new Mailer();
-        
-        mail.sendMail("ld.conejo@gmail.com","Confirm","Confirm");
 		journeyController.handle(restUrl,res);
             
 		break;
