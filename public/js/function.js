@@ -1,3 +1,15 @@
+window.onload = function(){
+    
+    //document.getElementById('searchButton').onclick = function(){alert("search");//ajaxCall("search");};  // search 
+    //alert("hola");
+    loadVariables();
+}
+
+function loadVariables(){
+    document.getElementById("idDate").innerHTML = "<h4>"+writeDate()+"</h4>";
+    document.getElementById("searchButton").onclick = function(){alert("hola");};
+}
+
 function writeDate(){
     var now = new Date()
     var day = now.getDay()
@@ -7,19 +19,19 @@ function writeDate(){
 
     //El día de la semana
     if(day==0){
-     date="Sunday, ";
+     date="Sunday ";
     }else if(day==1){
-     date="Monday, ";
+     date="Monday ";
     }else if(day==2){
-     date="Tuesday, ";
+     date="Tuesday ";
     }else if(day==3){
-     date="Wednesday, ";
+     date="Wednesday ";
     }else if(day==4){
-     date="Thursday, ";
+     date="Thursday ";
     }else if(day==5){
-     date="Friday, ";
+     date="Friday ";
     }else{
-     date="Saturday, ";
+     date="Saturday ";
     }
 
     date = date + now.getDate() + ", "
@@ -53,6 +65,9 @@ function writeDate(){
     var year = now.getFullYear()
 
     date = date + ", " + year
-
-    document.getElementById("idDate").innerHTML = "<h4>"+date+"</h4>";
+    
+    return date;
+    
 }
+
+

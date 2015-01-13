@@ -11,8 +11,6 @@ window.onload = function()
 	ajaxCall("loadAll");
 }
 
-
-
 // helper method: format a single song...
 function journeyToHTML(){
 	var JourneyHtml = "<li id=\""+journey.id+"\">"
