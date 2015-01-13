@@ -2,7 +2,7 @@
 
 //Modules within the Project
 var UserData    = require("../model/user_mgmt");
-var User 	   = require("../model/user_model");
+var User 	    = require("../model/user_model");
 var UserView    = require("../view/login_view");
 
 //Init
