@@ -1,0 +1,55 @@
+<h2>Edit Journey: {NAME}</h2>	
+
+<table>
+        <tr>
+            <td>
+            Name
+            </td>
+            <td>
+                <input id="newjourney_name" type="text"  value="{NAME}" maxlength="50"  tabindex="-1"/>
+            </td>
+        </tr>
+        <tr>
+            <td>
+            Start
+            </td>
+            <td>
+                <input id="newjourney_start" type="date"  value="{START}" maxlength="50"  tabindex="-1"/>
+            </td>
+        </tr>
+        <tr>
+            <td>
+            End
+            </td>
+            <td>
+                <input id="newjourney_end" type="date"  value="{END}" maxlength="50"  tabindex="-1"/>
+            </td>
+        </tr>
+        <tr>
+            <td>
+            Country
+            </td>
+            <td>
+                <input id="newjourney_country" type="text"  value="{COUNTRY}" maxlength="50"  tabindex="-1"/>
+            </td>
+        </tr>
+        <tr>
+            <td>
+            Summary
+            </td>
+            <td>
+                <textarea id="newjourney_summary" rows="10" cols="50" value="{SUMMARY}"></textarea>
+            </td>
+        </tr>
+        <tr>
+            <td>
+            Image
+            </td>
+            <td>
+                <input id = "newjourney_image" type="file" onchange="previewFile()"><br></div>
+                <div><img src='{IMAGE}' height="100" alt="Image preview."></div>
+            </td>
+        </tr>
+</table>
+
+<button id="saveJourney">Save Journey</button>

@@ -1,7 +1,9 @@
-INSTALL.txt
+INSTALL.txt 
 ===========
 
 Welcome to MyJourney install process
+
+The WebApp is for WINDOWS OS
 
 Before you can run this app 
 
@@ -17,6 +19,8 @@ npm install crypto
 
 
 To run this app 
+
+c0) First you need to initialize the Redis-Server, so go into node-modules/redis-server/redis-server.exe and leave the prompt open
 
 c1) in	production mode
 		
