@@ -22,7 +22,7 @@ function createUser(){
                     alert("The User was registed correctly. An email was sended to you to confirm your registration.");
                     window.open("/journey/all.html","_self");
                 }else {
-                    debug("Error from the web service for action "+action+": "+xmlhttp.status+": "+xmlhttp.responseText)
+                    alert("Error from the web service for action : "+xmlhttp.status+": "+xmlhttp.responseText)
                 }
             }
         };

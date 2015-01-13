@@ -13,6 +13,7 @@ var redis = require("redis");
 //Initialize class
 var UserData = function(){
     this.db = redis.createClient(6379,"127.0.0.1");
+    this.counter = 0;
 };
 
 UserData.prototype.add_user = function(theView,res,restUrl){
@@ -32,19 +33,24 @@ UserData.prototype.create = function(theView,res,restUrl){
     };
     
     var sendAuth = function(user_name,email){
-        var key = crypto.randomBytes(8).toString('hex');
 
-        var message = "My Journey\n\nConfirm Registration\n\nDear "+user_name+": You just register to our page. First, we need you to confirm your registration.\n\nClick to the next link for it. \n\n"
+            var key = crypto.randomBytes(8).toString('hex');
 
-        var authlink = "http://" + config.server + ":" + config.port + "/login/confirm.json?email=" + email + "&auth=" + key;
+            var message = "My Journey\n\nConfirm Registration\n\nDear "+user_name+": You just register to our page. First, we need you to confirm your registration.\n\nClick to the next link for it. \n\n"
 
-        message += authlink;
+            var authlink = "http://" + config.server + ":" + config.port + "/login/confirm.json?user_name=" + user_name + "&auth=" + key;
 
-        var mail = new Mailer();
+            message += authlink;
 
-        mail.sendMail(email,"MyJourney || Confirm your registration",message);
+            var mail = new Mailer();
 
-    }
+            mail.sendMail(email,"MyJourney || Confirm your registration",message,function(err,message){
+
+            });
+
+        }
+
+    
 
     var returnErr = this.returnErr;
 
@@ -61,6 +67,7 @@ UserData.prototype.create = function(theView,res,restUrl){
             if (err === null ){
                 //Not yet register, first you have to confirm
                 sendAuth(user_name,email);
+                theView.render(res,restUrl);
             }
             else{
                 returnErr(res,"Error creating new user: "+err);
@@ -69,20 +76,6 @@ UserData.prototype.create = function(theView,res,restUrl){
     });
 };
 
-UserData.prototype.sendAuth = function(user_name,email){
-    var key = crypto.randomBytes(8).toString('hex');
-    
-    var message = "My Journey\n\nConfirm Registration\n\nDear "+user_name+": You just register to our page. First, we need you to confirm your registration.\n\nClick to the next link for it. \n\n"
-    
-    var authlink = "http://" + config.server + ":" + config.port + "/login/confirm.json?user_name=" + user_name + "&auth=" + key;
-    
-    message += authlink;
-    
-    var mail = new Mailer();
-        
-    mail.sendMail(email,"MyJourney || Confirm your registration",message);
-
-}
 
 
 UserData.prototype.findAll = function(theView,res,restUrl, filter){
