@@ -5,15 +5,15 @@ module.exports = {
 	  // console.log("request-url: '"+req.url+"'");
 	  var curr_url = req.url
   	  if (curr_url == "/" || curr_url == "" ){
-		  console.log("Redirect '/' to our welcome page 'index.html'... ")
+		  //console.log("Redirect '/' to our welcome page 'index.html'... ")
   		  curr_url="/index.html"
   	  }
 	  return curr_url
 	},
 	
-	//Return a controller based on the path/resource/filename/authentication/cookie/...
+	//Return a controller based on the path and resource
 	getController: function(restUrl){
-		console.log("DEBUG routes: restUrl.filename='"+restUrl.filename+"'... ")
+		//console.log("DEBUG routes: restUrl.filename='"+restUrl.filename+"'... ")
 		var controllerString = "default"
 			
 		if (restUrl.path.indexOf("public") >=0 ) controllerString = 'static'

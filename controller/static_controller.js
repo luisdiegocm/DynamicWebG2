@@ -31,7 +31,6 @@ StaticFilesController.prototype.handle = function(restUrl,res){
 				res.writeHead(200, {'Content-Type': 'image/jpeg'} );
 				res.end(filedata);
 			}else if ( restUrl.format.indexOf('m4a')>=0 ){
-				// TODO: streaming... 
 				res.writeHead(200, {'Content-Type': 'audio/m4a'} );
 				res.end(filedata);
 			}else if (restUrl.format.indexOf('htm')>=0) {

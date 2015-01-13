@@ -15,32 +15,30 @@ var sessMgmt = require('../model/session_mgmt');
 config.port = process.argv[2] || 8888;
 
 startup = function(){
-	//Start up the server
+    //Start up the server
 	http.createServer(function (req, res) {
         
-        console.log("\nURL Request'"+req.url+"'\n");
-		
-		//Function that checks if the URL is just a /, so it can redirect to index.html
+        //console.log("\nURL Request'"+req.url+"'\n");
+        
+        //Function that checks if the URL is just a /, so it can redirect to index.html
 		req.url = routes.checkForUrlRedirection(req);
         
-        //Evaluates the method the Client did
-	    if (req.method == 'POST' || req.method == 'PUT' ) { // POST & PUT might send data
-			// try e.g.: curl -X PUT --data "user=5" "http://localhost:8888/testing/song/2.json?title=Another%20bites&artist=queen"
-            
+        //Evaluates the method the request is using
+	    if (req.method == 'POST' || req.method == 'PUT' ) {        
             //Create a body variable to set the parameters
 	        var body = '';
-            
-			req.on('data', function(data) { // we 'wait' for postData first
+            //Wait for Post Data
+			req.on('data', function(data) {
 				body += data;
 			});
 	        req.on('end', function () {
- 				console.log("POST, so we got a data: '"+body+"'");
+ 				console.log("POST data: '"+body+"'");
                 //Instance of the Dictionary with the URL parts
  				var restUrl= new up.UrlParser(req,body);
  				restRouting(req,res,restUrl);
 	        });
 			
-		}else{ // GET, DELETE
+		}else{
             //Instance of the Dictionary with the URL parts
 			var restUrl= new up.UrlParser(req);
             //Resolve the URL
@@ -74,10 +72,10 @@ var restRouting = function(req,res,restUrl){
         console.log("User "+user+" logged in");
     }
   
-  //Route the URL 
-  console.log("Routing: we analyse url and return 'something' for restUrl: ", restUrl);
-  
-  switch(routes.getController(restUrl)){
+    //Route the URL 
+    //console.log("Routing: we analyse url and return 'something' for restUrl: ", restUrl);
+    //Switch between the possible controllers
+    switch(routes.getController(restUrl)){
     case 'static': 
           console.log("Static Files returned");
           var staticFileController = require('./static_controller');
