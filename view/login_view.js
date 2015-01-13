@@ -7,6 +7,7 @@ var redis = require("redis")
 var LoginView = function(){
     console.log("DEBUG user initialise...")
     this.layout="view/layout.html"
+    this.confirm="view/login/confirm_template.html";
     /*
     this.journey_template	="view/journey/journey_template.html"
     this.journeys_template	="view/journey/journeys_template.html"*/
@@ -21,6 +22,9 @@ LoginView.prototype.formatHtml = function(res,restUrl,data,htmlTemplate){
         // send html data back to client
         res.writeHead(200, {'Content-Type': 'text/html'} );
         res.end(result);
+    }else if (restUrl.id == "confirm"){
+        res.writeHead(200, {'Content-Type': 'text/html'} );
+        res.end(result);
     }
 };
 
@@ -31,7 +35,9 @@ LoginView.prototype.getDetailTemplate = function(loginView, res, restUrl, data, 
     var returnErr = this.returnErr
     //If you are searching
     if(restUrl.id == "login"){
-        var filenameDetailTemplate = this.login
+        var filenameDetailTemplate = this.login;
+    }else if (restUrl.id == "confirm"){
+        var filenameDetailTemplate = this.confirm;
     }
 
     console.log("Template for Details: '"+filenameDetailTemplate+"'");
@@ -69,12 +75,16 @@ LoginView.prototype.render = function(res,restUrl ,data){
     var loginView = this // we save the reference/pointer to this object
 
     if (format=="json"){ // content type for JSON
-        console.log("DEBUG: NEED TO IMPROVE FROM DATA "+data)
-        res.writeHead(200, {'Content-Type': 'application/json'} );
-        // format out data <= here into JSON
-        var result = JSON.stringify(data) // fill template
-        result +="\n"
-        res.end(result); // return formatted data to the client
+        if (restUrl.id=="confirm"){
+            this.getOverallLayout(loginView,res,restUrl,data);
+        }else{
+            console.log("DEBUG: NEED TO IMPROVE FROM DATA "+data)
+            res.writeHead(200, {'Content-Type': 'application/json'} );
+            // format out data <= here into JSON
+            var result = JSON.stringify(data) // fill template
+            result +="\n"
+            res.end(result); // return formatted data to the client
+        }
 
     }else if (format=="html"){
         // now we render one journey, many journeys or the journey-search form
