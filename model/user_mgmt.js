@@ -1,6 +1,11 @@
 "use strict";
 //FileSystem module
 var fs = require('fs');
+// Load the bcrypt module
+var bcrypt = require('bcrypt');
+// Generate a salt
+var salt = bcrypt.genSaltSync(10);
+
 //Model module
 var User = require("../model/user_model");
 // npm install redis
@@ -30,13 +35,15 @@ UserData.prototype.create = function(theView,res,restUrl){
 
     var user_name = restUrl.params['user_name'] || "post/get param user_name unknown";
     var password  = restUrl.params['password'] || "post/get param password unknonw"; //Needs to be encrypted
+    // Hash the password with the salt
+    var hash = bcrypt.hashSync(password, salt);
     var email     = restUrl.params['email'] || "post/get param email unknonw";
 
     var db = this.db;
 
     db.incr("SEQUENCE_ID",function(err,data){ //Unique ID
         var idNext = data;
-        var user = new User(idNext,user_name, password, email);
+        var user = new User(idNext,user_name, hash, email);
         db.hset("user", user.id, JSON.stringify(user), function(err, data){ // async read data (from db)
             if (err === null ){
                 db.hgetall('user',function(err,data){
