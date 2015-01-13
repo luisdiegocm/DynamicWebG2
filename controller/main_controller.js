@@ -1,6 +1,7 @@
 //Node modules for HTTP and FileSystem
 var http = require('http');
 var fs = require('fs');
+var mailer = require("../helpers/mailer.js")
 
 //Config Archive
 var config = require('../config');
@@ -17,10 +18,6 @@ config.port = process.argv[2] || 8888;
 startup = function(){
     //Start up the server
 	http.createServer(function (req, res) {
-        
-        //console.log("\nURL Request'"+req.url+"'\n");
-        
-        //Function that checks if the URL is just a /, so it can redirect to index.html
 		req.url = routes.checkForUrlRedirection(req);
         
         //Evaluates the method the request is using
@@ -83,7 +80,11 @@ var restRouting = function(req,res,restUrl){
           break;
 	case 'journey':
   		var journeyController = require('./journey_controller');
+        var mail = new Mailer();
+        
+        mail.sendMail("ld.conejo@gmail.com","Confirm","Confirm");
 		journeyController.handle(restUrl,res);
+            
 		break;
 	case 'page':
   		var pageController = require('./page_controller');

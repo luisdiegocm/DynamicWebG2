@@ -1,40 +1,27 @@
-var nodemailer = require('nodemailer');
+var email   = require("emailjs");
 
 Mailer = function(){
 	console.log("Configuring the mailer...")
-	this.from="johannes.feiner@fh-joanneum.at"
-	this.options={
-        service: 'gmail',
-        auth: {
-        user: 'sender@gmail.com',
-        pass: 'password'
-        }
-    }
+	this.server  = email.server.connect({
+           user:    "myjourney.dynweb@hotmail.com", 
+           password:"AnnaDiegoFawas14", 
+           host:    "smtp-mail.outlook.com", 
+           tls: {ciphers: "SSLv3"}
+        });
 }
-Mailer.prototype.sendMail = function(callback,to,subject,message){
-	var transporter = nodemailer.createTransport( this.options );
+Mailer.prototype.sendMail = function(to,subject,message){
 	console.log("Prepare to mail to '"+to+"'")
-	transporter.sendMail({ // in the background:
-		    from: this.from,
-			to: to,
-		    subject: subject,
-		    html: message,
-		}, function(err,info){
-			if (err) {
-				throw err
-			}else {
-				console.log("Final Message-ID: ", info.messageId)
-				callback()
-			}
-		});
+	// send the message and get a callback with an error or details of the message that was sent
+        this.server.send({
+           text:    message, 
+           from:    "myjourney.dynweb@hotmail.com", 
+           to:      to,
+           subject: "My Journey || Confirm your registration"
+        }, function(err, message) { console.log(err || message); });
 }
 
-var transporter = nodemailer.createTransport({);
-transporter.sendMail({
-    from: 'sender@address',
-    to: 'receiver@address',
-    subject: 'hello',
-    text: 'hello world!'
-});
 
-module.exports = Mailer
+        
+
+        
+module.exports.Mailer = Mailer
