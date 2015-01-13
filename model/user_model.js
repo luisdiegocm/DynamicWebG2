@@ -5,6 +5,7 @@ var User = function(id, user_name, password, email){
     this.user_name = user_name;
     this.password  = password; //Needs to be encrypted
     this.email     = email;
+    this.confirm   = 0;
 };
 
 

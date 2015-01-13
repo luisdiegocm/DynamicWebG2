@@ -18,6 +18,9 @@ UserController.prototype.handle = function(restUrl,res){
         this.userView.render(res,restUrl)
     }else if (restUrl.id == "create"){
         this.userData.create( this.userView ,res,restUrl);
+        //register
+    }else if (restUrl.id == "authentication"){
+        //login auth
     }else if (restUrl.id == "confirm"){
         //confirm email
     }
