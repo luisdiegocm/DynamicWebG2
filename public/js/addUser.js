@@ -1,4 +1,4 @@
-var crypto = require('crypto');
+//var crypto = require('crypto');
 
 window.onload = function(){
     loadDOM();
@@ -13,7 +13,6 @@ function createUser(){
         var email     = encodeURIComponent(document.getElementById('email').value);
         var user_name = encodeURIComponent(document.getElementById('user_name').value);
         var password  = encodeURIComponent(document.getElementById('password').value);
-        //password      = crypto.createHash(password);
 
         url = "create.json?email=" + email + "&user_name=" + user_name + "&password=" + password;
         xmlhttp.open('POST',url,true);
