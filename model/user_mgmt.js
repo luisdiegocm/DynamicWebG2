@@ -1,11 +1,8 @@
 "use strict";
 //FileSystem module
 var fs = require('fs');
-// Load the bcrypt module
-var bcrypt = require('bcrypt');
-// Generate a salt
-var salt = bcrypt.genSaltSync(10);
 
+var crypto = require("crypto");
 //Model module
 var User = require("../model/user_model");
 // npm install redis
@@ -35,30 +32,34 @@ UserData.prototype.create = function(theView,res,restUrl){
 
     var user_name = restUrl.params['user_name'] || "post/get param user_name unknown";
     var password  = restUrl.params['password'] || "post/get param password unknonw"; //Needs to be encrypted
-    // Hash the password with the salt
-    var hash = bcrypt.hashSync(password, salt);
     var email     = restUrl.params['email'] || "post/get param email unknonw";
 
     var db = this.db;
 
     db.incr("SEQUENCE_ID",function(err,data){ //Unique ID
         var idNext = data;
-        var user = new User(idNext,user_name, hash, email);
+        var user = new User(idNext,user_name, password, email);
         db.hset("user", user.id, JSON.stringify(user), function(err, data){ // async read data (from db)
             if (err === null ){
-                db.hgetall('user',function(err,data){
-                    var users=[];
-                    for (var i in data){
-                        users.push( JSON.parse(data[i]));
-                    };
-                    getDataCallbackFunction(err, users);
-                });
+                //Not yet register, first you have to confirm
+                this.sendAuth(user_name,email);
+            });
             }else{
                 returnErr(res,"Error creating new user: "+err);
             }
         });
     });
 };
+
+UserData.prototype.sendAuth = function(user_name,email){
+    var key = crypto.randomBytes(8).toString('hex');
+    
+    var message = "My Journey\n\nConfirm Registration\n\nDear "+user_name+": You just register to our page. First, we need you to confirm your registration.\n\nClick to the next link for it. \n\n"
+    
+    var authlink = "http://" + config.server + ":" + config.port + "/login/confirm?mail=" + uemail + "&key=" + auth_key;
+
+}
+
 
 UserData.prototype.findAll = function(theView,res,restUrl, filter){
     var returnErr = this.returnErr;
