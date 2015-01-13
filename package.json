@@ -1,7 +1,6 @@
 {
 	"name": 		"MyJourney",
 	"dependencies":	{
-		"nodemailer": ">0.1",
-        "redis": "0.12.1",
+         "bcrypt": "0.7.3"
 	}
 }
