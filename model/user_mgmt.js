@@ -89,6 +89,13 @@ UserData.prototype.create = function(theView,res,restUrl){
     var password  = restUrl.params['password'] || "post/get param password unknonw"; //Needs to be encrypted
     var email     = restUrl.params['email'] || "post/get param email unknonw";
     var key = crypto.randomBytes(8).toString('hex');
+    var algorithm = 'aes256'; // or any other algorithm supported by OpenSSL
+    var password_key = 'encryptPhrase';
+    var text = password;
+
+    var cipher = crypto.createCipher(algorithm, password_key);
+    var encrypted = cipher.update(text, 'utf8', 'hex') + cipher.final('hex');
+    password = encrypted;
     
     var db = this.db;
 
