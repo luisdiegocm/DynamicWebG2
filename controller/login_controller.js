@@ -16,34 +16,13 @@ UserController.prototype.handle = function(restUrl,res){
     //If you are adding a User
     if (restUrl.id == "login"){
         this.userView.render(res,restUrl)
-    }else{
-        var no = parseInt(restUrl.id);
-        if (!isNaN(no)){
-            if (restUrl.method=='PUT'){
-                //Receive the variables of User to update them
-                var user_name = restUrl.params['user_name'] || "please specify data";
-                var password  = restUrl.params['password'] || "please specify data";
-                var email     = restUrl.params['email'] || "please specify data";
-                //Create a new object User
-                var newUser= new User(restUrl.id, user_name, password, email);
-                //Call the Update Function
-                this.userData.persistById( this.userView ,res,restUrl,newUser);
-            }//If want to Delete a User
-            else if (restUrl.method=='DELETE'){
-                new UserData().deleteById( this.userView ,res,restUrl);
-            }//If just want to GET the data
-            else{
-                //Create a View Variable
-                var theView = new UserView();
-                this.userData.findById( this.userView ,res,restUrl);
-            }
-        }else{
-            console.log("DEBUG UserController handle: id unknown:",restUrl.id);
-            var msg="DEBUG UserController: id should be a number or 'first' or 'all'."+
-                " We do not know how to handle '"+restUrl.id+"'!";
-            this.userView.renderError(res,restUrl,msg);
-        }
+    }else if (restUrl.id == "create"){
+        this.userData.create( this.userView ,res,restUrl);
+    }else if (restUrl.id == "confirm"){
+        //confirm email
     }
+
+
 };
 
 //Create the Controller
