@@ -87,6 +87,8 @@ function updateThePageWithNewData(xmlhttp,action){
 }
 
 function ajaxCall(action,id){
+    alert("entre");
+    console.log("entre");
 	var xmlhttp;
 	xmlhttp=new XMLHttpRequest();
 	if (action=="search"){
