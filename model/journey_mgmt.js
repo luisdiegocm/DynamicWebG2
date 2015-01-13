@@ -138,6 +138,25 @@ JourneyData.prototype.findById = function(theView,res,restUrl){
 	}); 
 }
 
+JourneyData.prototype.findJourneyById = function(id){
+    console.log(id);
+	var returnErr = this.returnErr
+	this.db.hget("journey",id,function(err, data){ // async read data (from db)
+		if (err === null ){
+			if (data){
+                console.log(data.toString('UTF-8'));
+				var journey= JSON.parse( data.toString('UTF-8') )
+				return journey;			
+			}else{
+				returnErr(res,"Journey with id '"+id+"' not found.")				
+			}
+		}else
+			returnErr(res,"Error reading database: "+err);
+	}); 
+}
+
+
+
 // curl -X PUT "http://localhost:8888/testing/song/2.json?title=Another%20bites&artist=queen"
 //
 // update (=replace) a song with a given id

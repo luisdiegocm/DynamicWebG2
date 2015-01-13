@@ -1,6 +1,10 @@
 "use strict"
 var fs = require('fs')
-	
+var JourneyData = require("../model/journey_mgmt");
+// npm install redis
+var redis = require("redis")
+
+
 var JourneyView = function(){
 	console.log("DEBUG Journey initialise...")
 	this.layout="view/layout.html"
@@ -9,6 +13,7 @@ var JourneyView = function(){
 	this.search_template="view/journey/search_template.html"
     this.add_journey = "view/journey/add_journey.html";
     this.edit_journey = "view/journey/edit_journey.html";
+    this.db = redis.createClient(6379,"127.0.0.1")
 }
 
 
@@ -18,22 +23,58 @@ JourneyView.prototype.formatHtml = function(res,restUrl,data,htmlTemplate){
 	if (restUrl.id=="all"){ // a list of songs
 		// TODO smarter replacement
 		var journeyHTML=""
+        journeyHTML+="<body onload='hello()'> <table>";
 		for (var journey in data){
             console.log(journey);
 			var curr_journey=data[journey]
-			journeyHTML+= "<li>"
-			journeyHTML+= "<a href=\""+curr_journey.id+".html\">"
+            journeyHTML+="<tr> <td>"
+			journeyHTML+= "<a style='padding-right:5em ' href=\""+curr_journey.id+".html\">"
 			journeyHTML+= curr_journey.name
 			journeyHTML+= "</a>"
-			journeyHTML+= "</li>"
+			journeyHTML+= "</td><td>"
+            journeyHTML += "<button onclick = 'javascript:updateJourney("+curr_journey.id+")' id=\"putButton_"+curr_journey.id+"\" >Update</button>"
+            journeyHTML += "<button onclick = 'javascript:deleteJourney("+curr_journey.id+")' id=\"deleteButton_"+curr_journey.id+"\" title=\"Delete the Journey "+journey.title+"...\">Delete</button>"
+            journeyHTML += "</td></tr>"
+            //var JourneyHtml = "<li id=\""+journey.id+"\">"
+            //aLineOfHtmlForTheSong += "<form>id="+song.id+":" // better hide the id from the user
+            //aLineOfHtmlForTheSong += "</form>"
 		}
+        journeyHTML+="</table></body>"
 		result=result.replace(/{JOURNEYS}/g,journeyHTML ) 
+        	// send html data back to client	
+        res.writeHead(200, {'Content-Type': 'text/html'} );
+        res.end(result);
 			
 	}else if (restUrl.id == "add"){
-        var a;
+        	// send html data back to client	
+        res.writeHead(200, {'Content-Type': 'text/html'} );
+        res.end(result);
     }
-    else if (restUrl.id == "edit"){
-        var a;
+    else if (restUrl.resource == "edit"){
+        var Data = new JourneyData()
+        var returnErr = this.returnErr
+        this.db.hget("journey",restUrl.id,function(err, data){ // async read data (from db)
+            if (err === null ){
+                if (data){
+                    var journey= JSON.parse( data.toString('UTF-8') )
+                    console.log(journey.name);
+                    console.log(result);
+                    result=result.replace(/{NAME}/g,journey.name)
+                                    .replace(/{START}/g,journey.start)
+                                    .replace(/{END}/g,journey.end)
+                                    .replace(/{COUNTRY}/g,journey.country)
+                                    .replace(/{SUMMARY}/g,journey.summary)
+                                    .replace(/{IMAGE}/g,journey.image);
+                    
+                    // send html data back to client	
+                    res.writeHead(200, {'Content-Type': 'text/html'} );
+                    res.end(result);
+                }else{
+                    returnErr(res,"Journey with id '"+id+"' not found.")				
+                }
+            }else
+                returnErr(res,"Error reading database: "+err);
+        }); 
     }
     else{ // a single song:
 		// TODO smarter replacement
@@ -41,15 +82,20 @@ JourneyView.prototype.formatHtml = function(res,restUrl,data,htmlTemplate){
             console.log(result);
 			result=result.replace(/{NAME}/g,data.name) 
 						 .replace(/{START}/g,data.start)
-                         .replace(/img src=''/g,"img src='"+data.image+"' ")
+                                    .replace(/{END}/g,data.end)
+                                    .replace(/{COUNTRY}/g,data.country)
+                                    .replace(/{SUMMARY}/g,data.summary)
+                         .replace(/img src=''/g,"img src='"+data.image+"' ");
+            
+            	// send html data back to client	
+            res.writeHead(200, {'Content-Type': 'text/html'} );
+            res.end(result);
             
             //var preview = document.querySelector('img'); //selects the query named img
             //preview.src = data.image;
 	}
 			
-	// send html data back to client	
-	res.writeHead(200, {'Content-Type': 'text/html'} );
-	res.end(result);	
+	
 	
 }
 
@@ -64,7 +110,7 @@ JourneyView.prototype.getDetailTemplate = function(journeyView, res,restUrl,data
 		var filenameDetailTemplate = this.journeys_template			
 	}else if (restUrl.id == "add"){
         var filenameDetailTemplate = this.add_journey   
-    }else if (restUrl.id == "edit"){
+    }else if (restUrl.resource == "edit"){
         var filenameDetailTemplate = this.edit_journey
     }else{
 		var filenameDetailTemplate = this.journey_template		

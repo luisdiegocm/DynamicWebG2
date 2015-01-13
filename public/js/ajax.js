@@ -87,15 +87,8 @@ function updateThePageWithNewData(xmlhttp,action){
 }
 
 function ajaxCall(action,id){
-	debug("Button-Click: action="+action+" for id="+id)
 	var xmlhttp;
 	xmlhttp=new XMLHttpRequest();
-    if (confirm('Are you sure you want to save this thing into the database?')) {
-    // Save it!
-    } else {
-        // Do nothing!
-    }
-		
 	if (action=="search"){
 		var searchTerm = encodeURIComponent(document.getElementById('searchterm').value)
 		url="search.json?searchterm=" + searchTerm
@@ -106,14 +99,23 @@ function ajaxCall(action,id){
 		xmlhttp.open('GET',url,true);
         
 	}else if (action=="create"){
-		var name =encodeURIComponent(document.getElementById('newjourney_name').value)
-		var start=encodeURIComponent(document.getElementById('newjourney_start').value)
-        var end =encodeURIComponent(document.getElementById('newjourney_end').value)
-		var country=encodeURIComponent(document.getElementById('newjourney_country').value)
-        var summary =encodeURIComponent(document.getElementById('newjourney_summary').value)
-		var image=encodeURIComponent(document.getElementById('newjourney_image').value)
-		url="create.json?name=" + name + "&start=" + start + "&end=" + end + "&country=" + country + "&summary=" + summary + "&image=" + image;
-		xmlhttp.open('POST',url,true);
+        if (confirm("Are you sure?"){
+            var name =encodeURIComponent(document.getElementById('newjourney_name').value)
+            var start=encodeURIComponent(document.getElementById('newjourney_start').value)
+            var end =encodeURIComponent(document.getElementById('newjourney_end').value)
+            var country=encodeURIComponent(document.getElementById('newjourney_country').value)
+            var summary =encodeURIComponent(document.getElementById('newjourney_summary').value)
+            var image=encodeURIComponent(document.getElementById('newjourney_image').value)
+            url="create.json?name=" + name + "&start=" + start + "&end=" + end + "&country=" + country + "&summary=" + summary + "&image=" + image;
+            alert("The Journey was added correctly");
+            document.getElementById('newjourney_name').value = "";
+            document.getElementById('newjourney_start').value = "";
+            document.getElementById('newjourney_end').value = "";
+            document.getElementById('newjourney_country').value = "";
+            document.getElementById('newjourney_summary').value = "";
+            document.getElementById('newjourney_image').value = "";
+            xmlhttp.open('POST',url,true);
+        }
 	}else if (action=="update"){
         var name =encodeURIComponent(document.getElementById('journey_'+id+'_name').value)
 		var start=encodeURIComponent(document.getElementById('journey_'+id+'_start').value)
