@@ -9,7 +9,6 @@ var PageView = function(){
 	this.welcome_template	="view/page/welcome_template.html";
 	this.about_template		="view/page/about_template.html";
 	this.login_template 	="view/login/login_template.html";
-	this.signup_template 	="view/login/signup_template.html";
 	this.notfound_template	="view/page/notfound_template.html";
 };
 
@@ -39,8 +38,6 @@ PageView.prototype.getDetailTemplate = function(pageView, res,restUrl,data,layou
 		var filenameDetailTemplate = this.about_template
 	}else if (restUrl.id=="login"){
 		var filenameDetailTemplate = this.login_template			
-	}else if (restUrl.id=="signup"){
-		var filenameDetailTemplate = this.signup_template
 	}else{
 		var filenameDetailTemplate = this.notfound_template		
 	};
