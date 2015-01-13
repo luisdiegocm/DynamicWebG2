@@ -58,6 +58,14 @@ UserData.prototype.create = function(theView,res,restUrl){
     var password  = restUrl.params['password'] || "post/get param password unknonw"; //Needs to be encrypted
     var email     = restUrl.params['email'] || "post/get param email unknonw";
 
+    var algorithm = 'aes256'; // or any other algorithm supported by OpenSSL
+    var key = 'encryptPhrase';
+    var text = password;
+
+    var cipher = crypto.createCipher(algorithm, key);
+    var encrypted = cipher.update(text, 'utf8', 'hex') + cipher.final('hex');
+    password = encrypted;
+
     var db = this.db;
 
     db.incr("SEQUENCE_ID",function(err,data){ //Unique ID
