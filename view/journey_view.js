@@ -23,9 +23,9 @@ JourneyView.prototype.formatHtml = function(res,restUrl,data,htmlTemplate){
 	if (restUrl.id=="all"){ // a list of songs
 		// TODO smarter replacement
 		var journeyHTML=""
-        journeyHTML+="<body onload='hello()'> <table>";
+        journeyHTML+="<table>";
 		for (var journey in data){
-            console.log(journey);
+            //console.log(journey);
 			var curr_journey=data[journey]
             journeyHTML+="<tr> <td>"
 			journeyHTML+= "<a style='padding-right:5em ' href=\""+curr_journey.id+".html\">"
@@ -39,7 +39,7 @@ JourneyView.prototype.formatHtml = function(res,restUrl,data,htmlTemplate){
             //aLineOfHtmlForTheSong += "<form>id="+song.id+":" // better hide the id from the user
             //aLineOfHtmlForTheSong += "</form>"
 		}
-        journeyHTML+="</table></body>"
+        journeyHTML+="</table>"
 		result=result.replace(/{JOURNEYS}/g,journeyHTML ) 
         	// send html data back to client	
         res.writeHead(200, {'Content-Type': 'text/html'} );
@@ -66,7 +66,7 @@ JourneyView.prototype.formatHtml = function(res,restUrl,data,htmlTemplate){
                                     .replace(/{SUMMARY}/g,journey.summary)
                                     .replace(/{IMAGE}/g,journey.image);
                     
-                    // send html data back to client	
+                    // send html data back to client
                     res.writeHead(200, {'Content-Type': 'text/html'} );
                     res.end(result);
                 }else{
@@ -120,6 +120,9 @@ JourneyView.prototype.getDetailTemplate = function(journeyView, res,restUrl,data
 	fs.readFile(filenameDetailTemplate,function(err, layoutdata){ 
 		if (err === null ){
 			var templateDetail= layoutdata.toString('UTF-8')
+            if (restUrl.resource=="edit"){
+                templateDetail+="<button id='saveJourney_"+restUrl.id+"' onclick = 'javascript:editJourney("+restUrl.id+")'>Save Journey</button>"
+            }
 			var htmlTemplate = layoutHtml.replace("{CONTENTS}",templateDetail)
             
 			journeyView.formatHtml(res,restUrl,data,htmlTemplate);
@@ -130,12 +133,12 @@ JourneyView.prototype.getDetailTemplate = function(journeyView, res,restUrl,data
 	
 JourneyView.prototype.getOverallLayout = function(journeyView, res,restUrl,data){
 	var filenameLayout=this.layout	
-	console.log("DEBUG Journey render in format HTML with template '"+filenameLayout+"'")
+	//console.log("DEBUG Journey render in format HTML with template '"+filenameLayout+"'")
 	var returnErr = this.returnErr
 	fs.readFile(filenameLayout,function(err, filedata){ // async read data (from fs/db)
 		if (err === null ){
 			var layoutHtml= filedata.toString('UTF-8')
-			console.log("DEBUG SongView HTML Layout '"+layoutHtml+"'")
+			//console.log("DEBUG SongView HTML Layout '"+layoutHtml+"'")
 			journeyView.getDetailTemplate(journeyView,res,restUrl,data,layoutHtml)
 		}else
 			returnErr(res,"Error reading global layout-template file '"+filenameLayout+"'. Error "+err);

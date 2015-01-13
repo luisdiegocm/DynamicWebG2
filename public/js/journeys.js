@@ -24,6 +24,5 @@ function deleteJourney(id){
 }
 
 function updateJourney(id){
-    alert("entre 1 vez");
     window.open("/journey/edit/"+id+".html","_self");
 }
