@@ -10,7 +10,7 @@ var UserData = function(){
     this.db = redis.createClient(6379,"127.0.0.1");
 };
 
-JourneyData.prototype.add_user = function(theView,res,restUrl){
+UserData.prototype.add_user = function(theView,res,restUrl){
     theView.render(res,restUrl,users);
 };
 

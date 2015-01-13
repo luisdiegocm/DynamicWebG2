@@ -16,15 +16,13 @@ module.exports = {
 		//console.log("DEBUG routes: restUrl.filename='"+restUrl.filename+"'... ")
 		var controllerString = "default"
 			
-		if (restUrl.path.indexOf("public") >=0 ) controllerString = 'static'
-		if (restUrl.resource == "public") 		 controllerString = 'static'
-		if (restUrl.filename == "index.html" )   controllerString = 'page'
-			
-		if (restUrl.resource == "journey") 		 controllerString = 'journey'
-        
-        if (restUrl.resource == "edit") 		 controllerString = 'journey'
-			
-		if (restUrl.resource == "page") 		 controllerString = 'page'
+		if (restUrl.path.indexOf("public") >=0 ) controllerString = 'static';
+		if (restUrl.resource == "public") 		 controllerString = 'static';
+		if (restUrl.filename == "index.html" )   controllerString = 'page';
+		if (restUrl.resource == "journey") 		 controllerString = 'journey';
+        if (restUrl.resource == "edit") 		 controllerString = 'journey';
+		if (restUrl.resource == "login")			controllerString = 'login';
+		if (restUrl.resource == "page") 		 controllerString = 'page';
 			
 		//if (restUrl.resource == "testing") 		 controllerString = 'testing'
 			 

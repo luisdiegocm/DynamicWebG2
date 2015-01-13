@@ -89,6 +89,10 @@ var restRouting = function(req,res,restUrl){
   		var pageController = require('./page_controller');
 		pageController.handle(restUrl,res);
 		break;
+	case 'login':
+  		var pageController = require('./login_controller');
+		pageController.handle(restUrl,res);
+		break;
     /*
 	case 'testing':
 		var testingController = require('./testing_controller')

@@ -3,7 +3,7 @@
 //Modules within the Project
 var UserData    = require("../model/user_mgmt");
 var User 	   = require("../model/user_model");
-var UserView    = require("../view/user_view");
+var UserView    = require("../view/login_view");
 
 //Init
 var UserController = function(){
@@ -13,15 +13,8 @@ var UserController = function(){
 
 //Handles the petition from the main_controller
 UserController.prototype.handle = function(restUrl,res){
-    //If want to retrieve all the Users
-    if (restUrl.id == "all"){
-        //Call the findAll function that show all the Users
-        this.userData.findAll( this.userView,res,restUrl);
-        //If want to create a User
-    }else if (restUrl.id == 'create'){
-        this.userData.create( this.userView ,res,restUrl);
-    }//If you are adding a User
-    else if (restUrl.id == "add"){
+    //If you are adding a User
+    if (restUrl.id == "login"){
         this.userView.render(res,restUrl)
     }else{
         var no = parseInt(restUrl.id);
