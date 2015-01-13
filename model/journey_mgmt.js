@@ -15,6 +15,10 @@ var JourneyData = function(){
     
 }
 
+JourneyData.prototype.addJourney = function(theView,res,restUrl){
+    theView.render(res,restUrl,journeys)
+}
+
 //Create a new Journey
 JourneyData.prototype.create = function(theView,res,restUrl){
 	var returnErr = this.returnErr

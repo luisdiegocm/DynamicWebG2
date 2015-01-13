@@ -19,7 +19,11 @@ JourneyController.prototype.handle = function(restUrl,res){
 	}else if (restUrl.id == 'first'){
 		var msg="DEBUG JourneyController: TODO implement action 'first'";
 		this.journeyView.renderNotImplemented(res,restUrl,msg);
-	}else if (restUrl.id == 'search'){
+	}else if (restUrl.id == "add"){
+        this.journeyView.render(res,restUrl)
+    }else if (restUrl.id == "edit"){
+        this.journeyView.render(res,restUrl)
+    }else if (restUrl.id == 'search'){
 		var searchTerm=restUrl.params['searchterm'];
 		this.journeyData.findAll( this.journeyView ,res,restUrl,searchTerm); // we filter by searchTerm
 	}else{ 

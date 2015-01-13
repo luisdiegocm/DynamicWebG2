@@ -7,6 +7,8 @@ var JourneyView = function(){
 	this.journey_template	="view/journey/journey_template.html"
 	this.journeys_template	="view/journey/journeys_template.html"
 	this.search_template="view/journey/search_template.html"
+    this.add_journey = "view/journey/add_journey.html";
+    this.edit_journey = "view/journey/edit_journey.html";
 }
 
 
@@ -27,7 +29,13 @@ JourneyView.prototype.formatHtml = function(res,restUrl,data,htmlTemplate){
 		}
 		result=result.replace(/{JOURNEYS}/g,journeyHTML ) 
 			
-	}else{ // a single song:
+	}else if (restUrl.id == "add"){
+        var a;
+    }
+    else if (restUrl.id == "edit"){
+        var a;
+    }
+    else{ // a single song:
 		// TODO smarter replacement
 		if (data && data.name)
             console.log(result);
@@ -54,7 +62,11 @@ JourneyView.prototype.getDetailTemplate = function(journeyView, res,restUrl,data
     //If you want to see all Journeys
 	}else if (restUrl.id=="all"){
 		var filenameDetailTemplate = this.journeys_template			
-	}else{
+	}else if (restUrl.id == "add"){
+        var filenameDetailTemplate = this.add_journey   
+    }else if (restUrl.id == "edit"){
+        var filenameDetailTemplate = this.edit_journey
+    }else{
 		var filenameDetailTemplate = this.journey_template		
 	}
 	console.log("Template for Details: '"+filenameDetailTemplate+"'");
@@ -63,6 +75,7 @@ JourneyView.prototype.getDetailTemplate = function(journeyView, res,restUrl,data
 		if (err === null ){
 			var templateDetail= layoutdata.toString('UTF-8')
 			var htmlTemplate = layoutHtml.replace("{CONTENTS}",templateDetail)
+            
 			journeyView.formatHtml(res,restUrl,data,htmlTemplate);
 		}else
 			returnErr(res,"Error reading detail-template file '"+filenameDetailTemplate+"' for journeys: "+err);
@@ -101,7 +114,8 @@ JourneyView.prototype.render = function(res,restUrl ,data){
 		if (data) 	
 			this.getOverallLayout(journeyView, res,restUrl,data)
 		else
-			this.getOverallLayout(journeyView, res,restUrl,data)
+			this.getOverallLayout(journeyView, res,restUrl)
+            
 	}else{
 		this.returnErr(res,"Error: The specified format '"+format+"' is unknown!")
 	}
