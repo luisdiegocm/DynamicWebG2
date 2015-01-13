@@ -10,41 +10,25 @@ var LoginView = function(){
     /*
     this.journey_template	="view/journey/journey_template.html"
     this.journeys_template	="view/journey/journeys_template.html"*/
-    this.login = "view/login/login.html";
+    this.login = "view/login/login_template.html";
     this.db = redis.createClient(6379,"127.0.0.1")
 };
 
 LoginView.prototype.formatHtml = function(res,restUrl,data,htmlTemplate){
     var result = htmlTemplate;
 
-    if (restUrl.id == "add"){
+    if (restUrl.id == "login"){
         // send html data back to client
         res.writeHead(200, {'Content-Type': 'text/html'} );
         res.end(result);
-    }
-    else{ // a single song:
-        // TODO smarter replacement
-        if (data && data.name)
-            console.log(result);
-        result=result.replace(/{NAME}/g,data.name)
-            .replace(/{START}/g,data.start)
-            .replace(/{END}/g,data.end)
-            .replace(/{COUNTRY}/g,data.country)
-            .replace(/{SUMMARY}/g,data.summary)
-            .replace(/img src=''/g,"img src='"+data.image+"' ");
-
-        // send html data back to client
-        res.writeHead(200, {'Content-Type': 'text/html'} );
-        res.end(result);
-
-        //var preview = document.querySelector('img'); //selects the query named img
-        //preview.src = data.image;
     }
 };
 
-LoginView.prototype.getDetailTemplate = function(userView, res, restUrl, data, layoutHtml){
+LoginView.prototype.getDetailTemplate = function(loginView, res, restUrl, data, layoutHtml){
     //Grab the format of the query
     var format = restUrl.format;
+
+    var returnErr = this.returnErr
     //If you are searching
     if(restUrl.id == "login"){
         var filenameDetailTemplate = this.login
@@ -60,20 +44,20 @@ LoginView.prototype.getDetailTemplate = function(userView, res, restUrl, data, l
             }
             var htmlTemplate = layoutHtml.replace("{CONTENTS}",templateDetail)
 
-            userView.formatHtml(res,restUrl,data,htmlTemplate);
-        }else
-            returnErr(res,"Error reading detail-template file '"+filenameDetailTemplate+"' for journeys: "+err);
+            loginView.formatHtml(res,restUrl,data,htmlTemplate);
+        }else{
+            returnErr(res,"Error reading detail-template file '"+filenameDetailTemplate+"' for journeys: "+err);}
     });
 };
 
-LoginView.prototype.getOverallLayout = function(userView, res,restUrl,data){
+LoginView.prototype.getOverallLayout = function(loginView, res,restUrl,data){
     var filenameLayout=this.layout
     //console.log("DEBUG Journey render in format HTML with template '"+filenameLayout+"'")
     var returnErr = this.returnErr
     fs.readFile(filenameLayout,function(err, filedata){ // async read data (from fs/db)
         if (err === null ){
             var layoutHtml= filedata.toString('UTF-8')
-            userView.getDetailTemplate(userView,res,restUrl,data,layoutHtml)
+            loginView.getDetailTemplate(loginView,res,restUrl,data,layoutHtml)
         }else
             returnErr(res,"Error reading global layout-template file '"+filenameLayout+"'. Error "+err);
     })
@@ -82,7 +66,7 @@ LoginView.prototype.render = function(res,restUrl ,data){
     var format = restUrl.format
     console.log("DEBUG user render in format: ",format)
 
-    var userView = this // we save the reference/pointer to this object
+    var loginView = this // we save the reference/pointer to this object
 
     if (format=="json"){ // content type for JSON
         console.log("DEBUG: NEED TO IMPROVE FROM DATA "+data)
@@ -95,9 +79,9 @@ LoginView.prototype.render = function(res,restUrl ,data){
     }else if (format=="html"){
         // now we render one journey, many journeys or the journey-search form
         if (data)
-            this.getOverallLayout(userView, res,restUrl,data)
+            this.getOverallLayout(loginView, res,restUrl,data)
         else
-            this.getOverallLayout(userView, res,restUrl)
+            this.getOverallLayout(loginView, res,restUrl)
 
     }else{
         this.returnErr(res,"Error: The specified format '"+format+"' is unknown!")
