@@ -1,11 +1,12 @@
 "use strict";
 
-var User = function(id, user_name, password, email){
+var User = function(id, user_name, password, email,keyauth){
     this.id        = id;
     this.user_name = user_name;
     this.password  = password; //Needs to be encrypted
     this.email     = email;
     this.confirm   = 0;
+    this.keyauth   = keyauth;
 };
 
 
