@@ -47,7 +47,7 @@ StaticFilesController.prototype.handle = function(restUrl,res){
 				res.end(filedata.toString('UTF-8'));
 			}else if (restUrl.format.indexOf('ico')>=0) {
 				res.writeHead(200, {'Content-Type': 'image/x-icon'} );
-				res.end(filedata.toString('UTF-8'));
+				res.end(filedata);
             }else
 				returnErr(res,"Unsupported file type: '"+restUrl.format+"'")			
 		}else

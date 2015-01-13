@@ -4,9 +4,12 @@ Mailer = function(){
 	console.log("Configuring the mailer...")
 	this.from="johannes.feiner@fh-joanneum.at"
 	this.options={
-		host:"mail.fh-joanneum.at",
-		port:25
-	}
+        service: 'gmail',
+        auth: {
+        user: 'sender@gmail.com',
+        pass: 'password'
+        }
+    }
 }
 Mailer.prototype.sendMail = function(callback,to,subject,message){
 	var transporter = nodemailer.createTransport( this.options );
@@ -25,4 +28,13 @@ Mailer.prototype.sendMail = function(callback,to,subject,message){
 			}
 		});
 }
+
+var transporter = nodemailer.createTransport({);
+transporter.sendMail({
+    from: 'sender@address',
+    to: 'receiver@address',
+    subject: 'hello',
+    text: 'hello world!'
+});
+
 module.exports = Mailer
