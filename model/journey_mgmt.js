@@ -53,10 +53,10 @@ JourneyData.prototype.create = function(theView,res,restUrl){
 				console.log("DEBUG: all journeys as raw data:",data)
 				var journeys=[]
 				for (var i in data){
-					console.log("DEBUG: a journey:",i, data[i] )
+					//console.log("DEBUG: a journey:",i, data[i] )
 					journeys.push( JSON.parse( data[i] ) )	
 				}
-				console.log("DEBUG: all journeys:",journeys)
+				//console.log("DEBUG: all journeys:",journeys)
 				gotDataCallbackFunction( err, journeys )
 			});
 		}else{
@@ -87,7 +87,7 @@ JourneyData.prototype.findAll = function(theView,res,restUrl, filter){
 		//console.log("DEBUG: songs['2']:",JSON.parse(data['2']).title )
 		var journeys=[]
 		for (var i in data){
-			console.log("DEBUG: a journey:",i, data[i] )
+			//console.log("DEBUG: a journey:",i, data[i] )
 			var newJourney=JSON.parse( data[i] )
 
 			newJourney.__proto__ = Journey.prototype; 
@@ -95,7 +95,7 @@ JourneyData.prototype.findAll = function(theView,res,restUrl, filter){
 				journeys.push( newJourney )					
 			} 
 		}
-		console.log("DEBUG: all journeys:",journeys)
+		//console.log("DEBUG: all journeys:",journeys)
 		gotDataCallbackFunction( err, journeys )
 	});
 
@@ -137,6 +137,25 @@ JourneyData.prototype.findById = function(theView,res,restUrl){
 			returnErr(res,"Error reading database: "+err);
 	}); 
 }
+
+JourneyData.prototype.findJourneyById = function(id){
+    console.log(id);
+	var returnErr = this.returnErr
+	this.db.hget("journey",id,function(err, data){ // async read data (from db)
+		if (err === null ){
+			if (data){
+                console.log(data.toString('UTF-8'));
+				var journey= JSON.parse( data.toString('UTF-8') )
+				return journey;			
+			}else{
+				returnErr(res,"Journey with id '"+id+"' not found.")				
+			}
+		}else
+			returnErr(res,"Error reading database: "+err);
+	}); 
+}
+
+
 
 // curl -X PUT "http://localhost:8888/testing/song/2.json?title=Another%20bites&artist=queen"
 //

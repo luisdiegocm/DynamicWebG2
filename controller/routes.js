@@ -21,6 +21,8 @@ module.exports = {
 		if (restUrl.filename == "index.html" )   controllerString = 'page'
 			
 		if (restUrl.resource == "journey") 		 controllerString = 'journey'
+        
+        if (restUrl.resource == "edit") 		 controllerString = 'journey'
 			
 		if (restUrl.resource == "page") 		 controllerString = 'page'
 			

@@ -1,11 +1,8 @@
 window.onload = function(){
-    
-    //document.getElementById('searchButton').onclick = function(){alert("search");//ajaxCall("search");};  // search 
-    //alert("hola");
-    loadVariables();
+    loadDOM();
 }
 
-function loadVariables(){
+function loadDOM(){
     document.getElementById("idDate").innerHTML = "<h4>"+writeDate()+"</h4>";
     document.getElementById("searchButton").onclick = function(){alert("hola");};
 }
