@@ -1,47 +1,47 @@
-"use strict"
+"use strict";
 //FileSystem module
-var fs = require('fs')
+var fs = require('fs');
 //Model module
-var Journey = require("../model/journey_model")
+var Journey = require("../model/journey_model");
 
 // npm install redis
-var redis = require("redis")
+var redis = require("redis");
 
 //Initialize class
 var JourneyData = function(){
 	
-    console.log("DEBUG JourneyData initialisation. We setup the db-connection.")
-	this.db = redis.createClient(6379,"127.0.0.1")
+    console.log("DEBUG JourneyData initialisation. We setup the db-connection.");
+	this.db = redis.createClient(6379,"127.0.0.1");
     
-}
+};
 
 JourneyData.prototype.addJourney = function(theView,res,restUrl){
-    theView.render(res,restUrl,journeys)
-}
+    theView.render(res,restUrl,journeys);
+};
 
 //Create a new Journey
 JourneyData.prototype.create = function(theView,res,restUrl){
-	var returnErr = this.returnErr
+	var returnErr = this.returnErr;
 		
 	//Prepare the call-back-function
 	var gotDataCallbackFunction = function(err, journeys){
 		if (err === null ){
-			theView.render(res,restUrl,journeys)
+			theView.render(res,restUrl,journeys);
 		}else
 			returnErr(res,"Error with database: "+err);
-	}	
+	};
 
-	console.log("DEBUG Journey store journey by id '"+restUrl.id+"'...")
-	var returnErr = this.returnErr
+	console.log("DEBUG Journey store journey by id '"+restUrl.id+"'...");
+	var returnErr = this.returnErr;
     
-	var name=restUrl.params['name'] || "post/get param name unknown"
-	var start=restUrl.params['start'] || "post/get param start unknonw"
-	var end=restUrl.params['end'] || "post/get param end unknonw"
-	var country=restUrl.params['country'] || "post/get param country unknonw"
-	var summary=restUrl.params['summary'] || "post/get param summary unknonw"
-    var image=restUrl.params['image'] || "post/get param image unknonw"
+	var name=restUrl.params['name'] || "post/get param name unknown";
+	var start=restUrl.params['start'] || "post/get param start unknonw";
+	var end=restUrl.params['end'] || "post/get param end unknonw";
+	var country=restUrl.params['country'] || "post/get param country unknonw";
+	var summary=restUrl.params['summary'] || "post/get param summary unknonw";
+    var image=restUrl.params['image'] || "post/get param image unknonw";
 
-    var db = this.db
+    var db = this.db;
 	db.incr("SEQUENCE_ID",function(err,data){ //Unique ID
 	  var idNext=data
 	  console.log("for increase SEQUENCE_ID we got: ",idNext)
