@@ -21,7 +21,7 @@ UserController.prototype.handle = function(restUrl,res){
         this.userData.create( this.userView ,res,restUrl);
     }else if (restUrl.id == "authentication"){
         //login auth
-        this.userData.check();
+        this.userData.auth();
     }else if (restUrl.id == "confirm"){
         //confirm email
         this.userData.confirm(this.userView,res,restUrl);

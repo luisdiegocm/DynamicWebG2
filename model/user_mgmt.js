@@ -89,13 +89,19 @@ UserData.prototype.create = function(theView,res,restUrl){
     var password  = restUrl.params['password'] || "post/get param password unknonw"; //Needs to be encrypted
     var email     = restUrl.params['email'] || "post/get param email unknonw";
     var key = crypto.randomBytes(8).toString('hex');
-    var algorithm = 'aes256'; // or any other algorithm supported by OpenSSL
-    var password_key = 'encryptPhrase';
-    var text = password;
 
-    var cipher = crypto.createCipher(algorithm, password_key);
-    var encrypted = cipher.update(text, 'utf8', 'hex') + cipher.final('hex');
-    password = encrypted;
+    function encrypt(password){
+        var algorithm = 'aes256'; // or any other algorithm supported by OpenSSL
+        var password_key = 'encryptPhrase';
+        var text = password;
+
+        var cipher = crypto.createCipher(algorithm, password_key);
+        var encrypted = cipher.update(text, 'utf8', 'hex') + cipher.final('hex');
+        password = encrypted;
+        return encrypted;
+    };
+
+    password = encrypt(password;)
     
     var db = this.db;
 
@@ -173,4 +179,35 @@ UserData.prototype.returnErr = function(res,msg){
     res.writeHead(503, {'Content-Type': 'text/plain'});
     res.end("ERROR: '"+msg+"'\n");
 };
+
+//
+// find a user by it's username
+//
+UserData.prototype.auth = function(theView,res,restUrl){
+    console.log("DEBUG User find user by name '" + restUrl.user_name + "'...");
+    var returnErr = this.returnErr;
+        if (err === null ){
+            if (data){
+                var user= JSON.parse(data.toString('UTF-8'));
+                if(UserData.prototype.authpass(restUrl.password, data.password)){
+                    //Authenticate
+                }
+                return restUrl.user_name;
+            }else{
+                returnErr(res,"User with name '" + restUrl.user_name + "' not found.");
+            }
+        }else
+            returnErr(res,"Error reading database: "+err);
+    });
+};
+
+UserData.prototype.authpass = function(password, hashpassword){
+    var encrypted = encrypted(password);
+    if(encrypted == hashpassword){
+        return true;
+    } else {
+        return false;
+    }
+}
+
 module.exports = UserData;

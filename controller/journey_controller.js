@@ -1,4 +1,4 @@
-"use strict"
+"use strict";
 
 //Modules within the Project
 var JourneyData    = require("../model/journey_mgmt");
