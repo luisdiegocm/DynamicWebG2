@@ -81,7 +81,7 @@ var restRouting = function(req,res,restUrl){
           break;
 	case 'journey':
   		var journeyController = require('./journey_controller');
-		journeyController.handle(restUrl,res);
+		journeyController.handle(restUrl,res,user);
             
 		break;
 	case 'page':

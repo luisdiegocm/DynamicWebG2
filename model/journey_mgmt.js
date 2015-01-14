@@ -19,7 +19,7 @@ JourneyData.prototype.addJourney = function(theView,res,restUrl){
 };
 
 //Create a new Journey and make it consistent
-JourneyData.prototype.create = function(theView,res,restUrl){
+JourneyData.prototype.create = function(theView,res,restUrl,user){
 	var returnErr = this.returnErr;
 		
 	//Prepare the call-back-function
@@ -31,55 +31,59 @@ JourneyData.prototype.create = function(theView,res,restUrl){
 			returnErr(res,"Error with database: "+err);
 	};
 
-	//console.log("DEBUG Journey store journey by id '"+restUrl.id+"'...");
-	var returnErr = this.returnErr;
-    //Initialize the parameters received from the URL
-	var name=restUrl.params['name'] || "post/get param name unknown";
-	var start=restUrl.params['start'] || "post/get param start unknonw";
-	var end=restUrl.params['end'] || "post/get param end unknonw";
-	var country=restUrl.params['country'] || "post/get param country unknonw";
-	var summary=restUrl.params['summary'] || "post/get param summary unknonw";
-    var image=restUrl.params['image'] || "post/get param image unknonw";
+    if (user){
+        //console.log("DEBUG Journey store journey by id '"+restUrl.id+"'...");
+        var returnErr = this.returnErr;
+        //Initialize the parameters received from the URL
+        var name=restUrl.params['name'] || "post/get param name unknown";
+        var start=restUrl.params['start'] || "post/get param start unknonw";
+        var end=restUrl.params['end'] || "post/get param end unknonw";
+        var country=restUrl.params['country'] || "post/get param country unknonw";
+        var summary=restUrl.params['summary'] || "post/get param summary unknonw";
+        var image=restUrl.params['image'] || "post/get param image unknonw";
 
-    //Database variable
-    var db = this.db;
-    //Async process to get the next unique ID
-	db.incr("SEQUENCE_ID",function(err,data){
-        //Variable with the ID
-        var idNext=data
-        //console.log("for increase SEQUENCE_ID we got: ",idNext)
-        //Create a Journey object
-        var journey = new Journey(idNext,name,start,end,country,summary,image);
-        //console.log("DEBUG JourneyData create a new journey with name='"+name+": ",journey)
-        //Async process to make the Journey consistent in the DB
-        db.hset("journey",journey.id,JSON.stringify(journey), function(err, data){
-		if (err === null ){
-            //Async process that get all the Journeys already consistent in the DB
-			db.hgetall('journey',function(err,data){
-				//console.log("DEBUG: all journeys as raw data:",data)
-                //Array variable to push all the Journeys from the DB
-				var journeys=[]
-                //Iteration within the Journeys from the DB
-				for (var i in data){
-					//console.log("DEBUG: a journey:",i, data[i] )
-                    //Push the JSON object into the array
-					journeys.push( JSON.parse( data[i] ) )	
-				}
-				//console.log("DEBUG: all journeys:",journeys)
-                //Call the call-back function
-				gotDataCallbackFunction( err, journeys )
-			});
-		}else{
-			console.log("ERROR: creating new journey")
-			returnErr(res,"Error creating new journey: "+err);
-		}
-	  });
-    })
+        //Database variable
+        var db = this.db;
+        //Async process to get the next unique ID
+        db.incr("SEQUENCE_ID",function(err,data){
+            //Variable with the ID
+            var idNext=data
+            //console.log("for increase SEQUENCE_ID we got: ",idNext)
+            //Create a Journey object
+            var journey = new Journey(idNext,name,start,end,country,summary,image,user);
+            //console.log("DEBUG JourneyData create a new journey with name='"+name+": ",journey)
+            //Async process to make the Journey consistent in the DB
+            db.hset("journey",journey.id,JSON.stringify(journey), function(err, data){
+            if (err === null ){
+                //Async process that get all the Journeys already consistent in the DB
+                db.hgetall('journey',function(err,data){
+                    //console.log("DEBUG: all journeys as raw data:",data)
+                    //Array variable to push all the Journeys from the DB
+                    var journeys=[]
+                    //Iteration within the Journeys from the DB
+                    for (var i in data){
+                        //console.log("DEBUG: a journey:",i, data[i] )
+                        //Push the JSON object into the array
+                        journeys.push( JSON.parse( data[i] ) )	
+                    }
+                    //console.log("DEBUG: all journeys:",journeys)
+                    //Call the call-back function
+                    gotDataCallbackFunction( err, journeys )
+                });
+            }else{
+                console.log("ERROR: creating new journey")
+                returnErr(res,"Error creating new journey: "+err);
+            }
+          });
+        })
+    }else{
+        returnErr(res,"Error creating new journey: NO USER");   
+    }
 }
 
 
 //Find all the Journeys from the DB (it is used for the Search function as well)
-JourneyData.prototype.findAll = function(theView,res,restUrl, filter){
+JourneyData.prototype.findAll = function(theView,res,restUrl, filter,user){
 	//console.log("DEBUG Journey find all journeys...")
 	var returnErr = this.returnErr
 		
@@ -102,12 +106,14 @@ JourneyData.prototype.findAll = function(theView,res,restUrl, filter){
 			//console.log("DEBUG: a journey:",i, data[i] )
             //Create the JSON Journey object from the DB
             var newJourney=JSON.parse( data[i] );
-            //Uses the model Journey object to make a Search with the filter
-			newJourney.__proto__ = Journey.prototype; 
-			if ( newJourney.fulfillsSearchCriteria(filter) ){
-                //Push the journeys that fullfill the filter (if it's no filter, then all the Journeys fullfill)
-				journeys.push( newJourney );				
-			} 
+                if (newJourney.user==user){
+                //Uses the model Journey object to make a Search with the filter
+                newJourney.__proto__ = Journey.prototype; 
+                if ( newJourney.fulfillsSearchCriteria(filter) ){
+                    //Push the journeys that fullfill the filter (if it's no filter, then all the Journeys fullfill)
+                    journeys.push( newJourney );				
+                } 
+            }
 		}
 		//console.log("DEBUG: all journeys:",journeys)
 		gotDataCallbackFunction( err, journeys );

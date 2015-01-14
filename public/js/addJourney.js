@@ -14,23 +14,27 @@ function createJourney(){
         var country=encodeURIComponent(document.getElementById('newjourney_country').value)
         var summary =encodeURIComponent(document.getElementById('newjourney_summary').value)
         var image=encodeURIComponent(document.getElementById('newjourney_image').value)
-        alert(image);
-        url="create.json?name=" + name + "&start=" + start + "&end=" + end + "&country=" + country + "&summary=" + summary + "&image=" + image;
-        xmlhttp.open('POST',url,true);
-    
-    	xmlhttp.onreadystatechange=function(){
-  		if (xmlhttp.readyState==4){
-  			if (xmlhttp.status==200){
-				// TODO: enable "relevant" buttons again
-				alert("The Journey was created correctly");
-				window.open("/journey/all.html","_self");
-			}else{
-				debug("Error from the web service for action "+action+": "+xmlhttp.status+": "+xmlhttp.responseText)
-			}
-    	}
-  	}
 
-	xmlhttp.send();
+        if (name != ""){
+            url="create.json?name=" + name + "&start=" + start + "&end=" + end + "&country=" + country + "&summary=" + summary + "&image=" + image;
+            xmlhttp.open('POST',url,true);
+
+            xmlhttp.onreadystatechange=function(){
+            if (xmlhttp.readyState==4){
+                if (xmlhttp.status==200){
+                    // TODO: enable "relevant" buttons again
+                    alert("The Journey was created correctly");
+                    window.open("/journey/all.html","_self");
+                }else{
+                    alert("Error from the web service for action "+xmlhttp.status+": "+xmlhttp.responseText)
+                }
+            }
+        }
+
+        xmlhttp.send();
+        }else{
+            alert("Please add a Name to this Journey");   
+        }
     }else{
         
     }

@@ -1,13 +1,14 @@
 "use strict"
 	
-var Journey = function(id,name,start,end,country,summary,image){
+var Journey = function(id,name,start,end,country,summary,image,user){
 	this.id=id
 	this.name=name
 	this.start=start
     this.end = end
     this.country = country;
     this.summary = summary;
-    this.image = image || null
+    this.image = image || null;
+    this.user = user;
 }
 
 Journey.prototype.toString = function(){

@@ -25,7 +25,7 @@ LoginView.prototype.formatHtml = function(res,restUrl,data,htmlTemplate){
         res.writeHead(200, {'Content-Type': 'text/html'} );
         res.end(result);
     }else if (restUrl.id == "confirm"){
-        result.replace("{CONTENT}","Dear "+data.user_name+". Your confimation was received correctly. Now you can log in");
+        result = result.replace("{CONTENT}","Dear "+data.user_name+". Your confimation was received correctly. Now you can log in");
         res.writeHead(200, {'Content-Type': 'text/html'} );
         res.end(result);
     }

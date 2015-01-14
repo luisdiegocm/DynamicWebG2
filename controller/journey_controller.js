@@ -13,14 +13,14 @@ var JourneyController = function(){
 };
 
 //Handles the petition from the main_controller
-JourneyController.prototype.handle = function(restUrl,res){
+JourneyController.prototype.handle = function(restUrl,res,user){
 	//If want to retrieve all the Journeys
 	if (restUrl.id == "all"){
         //Call the findAll function that show all the Journeys
-		this.journeyData.findAll( this.journeyView,res,restUrl);
+		this.journeyData.findAll( this.journeyView,res,restUrl,undefined,user);
     //If want to create a Journey
 	}else if (restUrl.id == 'create'){ 
-		this.journeyData.create( this.journeyView ,res,restUrl);
+		this.journeyData.create( this.journeyView ,res,restUrl,user);
 	}//If you are adding a Journey
     else if (restUrl.id == "add"){
         this.journeyView.render(res,restUrl)
@@ -32,7 +32,7 @@ JourneyController.prototype.handle = function(restUrl,res){
         //Variable with the "searchterm"
 		var searchTerm=restUrl.params['searchterm'];
         //Call the findAll but with the filter
-		this.journeyData.findAll( this.journeyView ,res,restUrl,searchTerm);
+		this.journeyData.findAll( this.journeyView ,res,restUrl,searchTerm,user);
 	}else{ 
         //If the id is a number, then it should be a Update or Delete function
 		var no = parseInt(restUrl.id);
@@ -49,7 +49,7 @@ JourneyController.prototype.handle = function(restUrl,res){
                 var summary=restUrl.params['summary'] || "please specify data";
                 var image=restUrl.params['image'] || "please specify data";
                 //Create a new object Journey
-				var newJourney= new Journey(restUrl.id,name,start,end,country,summary,image);
+				var newJourney= new Journey(restUrl.id,name,start,end,country,summary,image,user);
                 //Call the Update Function
 				this.journeyData.persistById( this.journeyView ,res,restUrl,newJourney);
 			}//If want to Delete a Journey
