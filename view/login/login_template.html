@@ -1,18 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+	
+
 <script src="/public/js/addUser.js" type="text/javascript"></script>
+<style type="text/css">
+.SignHead {
+	font-family: alike;
+	font-style: normal;
+	font-weight: 400;
+	font-size: x-large;
+	color: #000000;
+}
+.LoginEmail {
+	font-family: alike;
+	font-style: normal;
+	font-weight: 400;
+	font-size: smaller;
+	color: #000000;
+}
+.LoginUser {
+	font-size: smaller;
+	font-family: alike;
+	font-style: normal;
+	font-weight: 400;
+	color: #000000;
+}
+.LoginPass {
+	font-family: alike;
+	font-style: normal;
+	font-weight: 400;
+	font-size: smaller;
+	color: #000000;
+}
+</style>
+<!--The following script tag downloads a font from the Adobe Edge Web Fonts server for use within the web page. We recommend that you do not modify it.-->
+<script>var __adobewebfontsappname__="dreamweaver"</script>
+<script src="http://use.edgefonts.net/alike:n4:default.js" type="text/javascript"></script>
 
-<h2>Sign up!</h2>
 
-<table>
+
+<h2 class="SignHead">Sign up!</h2>
+    
+</head>
+<body>
+    <table>
     <tr>
-        <td>
-            email
-        </td>
+        <td class="LoginEmail">Email </td>
         <td>
             <input id="email" type="email"  value="" maxlength="50"  tabindex="-1"/>
         </td>
     </tr>
     <tr>
-        <td>
+        <td class="LoginUser">
             User name
         </td>
         <td>
@@ -20,7 +60,7 @@
         </td>
     </tr>
     <tr>
-        <td>
+        <td class="LoginPass">
             Password
         </td>
         <td>
@@ -30,3 +70,5 @@
 </table>
 
 <button id="addUser" onclick='ajaxCall("create")'>Sign up!</button>
+</body>
+</html>
