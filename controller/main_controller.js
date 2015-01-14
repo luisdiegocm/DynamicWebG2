@@ -102,8 +102,5 @@ var restRouting = function(req,res,restUrl){
 		res.end('Not a correct route: "'+restUrl.filename+'" with path="'+restUrl.path+'", id="'+restUrl.id+'" and type="'+restUrl.format+'" !\n');
   }
 };
-	
-
-
 
 module.exports.startup=startup;

@@ -1,10 +1,9 @@
 "use strict";
 //FileSystem module
-var fs = require('fs');
-
-var crypto = require("crypto");
-
-var config = require('../config');
+var fs       = require('fs');
+var crypto   = require("crypto");
+var config   = require('../config');
+var sessMgmt = require('../model/session_mgmt');
 
 //Model module
 var User = require("../model/user_model");
@@ -101,7 +100,7 @@ UserData.prototype.create = function(theView,res,restUrl){
         return encrypted;
     };
 
-    password = encrypt(password;)
+    password = encrypt(password);
     
     var db = this.db;
 
@@ -191,15 +190,20 @@ UserData.prototype.auth = function(theView,res,restUrl){
                 var user= JSON.parse(data.toString('UTF-8'));
                 if(UserData.prototype.authpass(restUrl.password, data.password)){
                     //Authenticate
+                    //Get or create a new session according to the Session_ID
+                    var session = sessMgmt.getOrCreateSession(session_id,restUrl.params);
+                    session.prototype.newUser(restUrl.user_name)
+                } else {
+                    returnErr(res,"Incorrent password");
                 }
-                return restUrl.user_name;
             }else{
                 returnErr(res,"User with name '" + restUrl.user_name + "' not found.");
             }
-        }else
-            returnErr(res,"Error reading database: "+err);
-    });
-};
+        }else {
+            returnErr(res, "Error reading database: " + err);
+        }
+    };
+
 
 UserData.prototype.authpass = function(password, hashpassword){
     var encrypted = encrypted(password);

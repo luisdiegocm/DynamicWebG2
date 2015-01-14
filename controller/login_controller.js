@@ -19,7 +19,7 @@ UserController.prototype.handle = function(restUrl,res){
     }else if (restUrl.id == "create"){
         //register
         this.userData.create( this.userView ,res,restUrl);
-    }else if (restUrl.id == "authentication"){
+    }else if (restUrl.id == "auth"){
         //login auth
         this.userData.auth();
     }else if (restUrl.id == "confirm"){
