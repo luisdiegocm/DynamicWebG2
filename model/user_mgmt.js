@@ -115,32 +115,6 @@ UserData.prototype.create = function(theView,res,restUrl){
     });
 };
 
-
-
-UserData.prototype.findAll = function(theView,res,restUrl, filter){
-    var returnErr = this.returnErr;
-
-    // prepare the call-back-function
-    var getDataCallbackFunction = function(err, users){
-        if (err === null ){
-            theView.render(res,restUrl, users);
-        }else
-            returnErr(res,"Error reading file: "+err);
-    };
-
-    this.db.hgetall('user', function(err,data){
-        var users = [];
-        for (var i in data){
-            var newUser = JSON.parse(data[i]);
-            newUser.__proto__ = User.prototype;
-            if ( newUser.fulfillsSearchCriteria(filter) ){
-                users.push(newUser);
-            }
-        }
-        getDataCallbackFunction(err, users);
-    });
-};
-
 UserData.prototype.deleteById = function(theView,res,restUrl){
     console.log("DEBUG User delete user by id '" + restUrl.id + "'...");
     var returnErr = this.returnErr;
@@ -179,7 +153,7 @@ UserData.prototype.findById = function(theView,res,restUrl){
 
 UserData.prototype.findUserById = function(id){
     console.log(id);
-    var returnErr = this.returnErr
+    var returnErr = this.returnErr;
     this.db.hget("user",id,function(err, data){ // async read data (from db)
         if (err === null ){
             if (data){

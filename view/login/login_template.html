@@ -5,18 +5,10 @@
 <table>
     <tr>
         <td>
-            email
-        </td>
-        <td>
-            <input id="new_email" type="email"  value="" maxlength="50"  tabindex="-1"/>
-        </td>
-    </tr>
-    <tr>
-        <td>
             User name
         </td>
         <td>
-            <input id="new_user_name" type="text"  value="" maxlength="50"  tabindex="-1"/>
+            <input id="user_name" type="text"  value="" maxlength="50"  tabindex="-1"/>
         </td>
     </tr>
     <tr>
@@ -24,14 +16,14 @@
             Password
         </td>
         <td>
-            <input id="new_password" type="password"  value="" maxlength="50"  tabindex="-1"/>
+            <input id="password" type="password"  value="" maxlength="50"  tabindex="-1"/>
         </td>
     </tr>
 </table>
 
-<button id="addUser" onclick='ajaxCall("create")'>Log in!</button><h2>Sign up!</h2>
-
 <hr/>
+
+<button id="singIn" onclick='ajaxCall("authentication")'>Log in!</button><h2>Sign up!</h2>
 
 <table>
     <tr>

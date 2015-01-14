@@ -15,12 +15,13 @@ var UserController = function(){
 UserController.prototype.handle = function(restUrl,res){
     //If you are adding a User
     if (restUrl.id == "login"){
-        this.userView.render(res,restUrl)
+        this.userView.render(res,restUrl);
     }else if (restUrl.id == "create"){
         //register
         this.userData.create( this.userView ,res,restUrl);
     }else if (restUrl.id == "authentication"){
         //login auth
+        this.userData.check();
     }else if (restUrl.id == "confirm"){
         //confirm email
         this.userData.confirm(this.userView,res,restUrl);
