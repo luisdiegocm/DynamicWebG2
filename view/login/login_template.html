@@ -1,6 +1,6 @@
 <script src="/public/js/addUser.js" type="text/javascript"></script>
 
-<h2>Sign up!</h2>
+<h2>Log in!</h2>
 
 <table>
     <tr>
@@ -8,7 +8,7 @@
             email
         </td>
         <td>
-            <input id="email" type="email"  value="" maxlength="50"  tabindex="-1"/>
+            <input id="new_email" type="email"  value="" maxlength="50"  tabindex="-1"/>
         </td>
     </tr>
     <tr>
@@ -16,7 +16,7 @@
             User name
         </td>
         <td>
-            <input id="user_name" type="text"  value="" maxlength="50"  tabindex="-1"/>
+            <input id="new_user_name" type="text"  value="" maxlength="50"  tabindex="-1"/>
         </td>
     </tr>
     <tr>
@@ -24,7 +24,38 @@
             Password
         </td>
         <td>
-            <input id="password" type="password"  value="" maxlength="50"  tabindex="-1"/>
+            <input id="new_password" type="password"  value="" maxlength="50"  tabindex="-1"/>
+        </td>
+    </tr>
+</table>
+
+<button id="addUser" onclick='ajaxCall("create")'>Log in!</button><h2>Sign up!</h2>
+
+<hr/>
+
+<table>
+    <tr>
+        <td>
+            email
+        </td>
+        <td>
+            <input id="new_email" type="email"  value="" maxlength="50"  tabindex="-1"/>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            User name
+        </td>
+        <td>
+            <input id="new_user_name" type="text"  value="" maxlength="50"  tabindex="-1"/>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            Password
+        </td>
+        <td>
+            <input id="new_password" type="password"  value="" maxlength="50"  tabindex="-1"/>
         </td>
     </tr>
 </table>

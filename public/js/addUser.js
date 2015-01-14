@@ -8,9 +8,9 @@ function createUser(){
     var xmlhttp;
     xmlhttp=new XMLHttpRequest();
     if (confirm("Are you sure?")){
-        var email     = encodeURIComponent(document.getElementById('email').value);
-        var user_name = encodeURIComponent(document.getElementById('user_name').value);
-        var password  = encodeURIComponent(document.getElementById('password').value);
+        var email     = encodeURIComponent(document.getElementById('new_email').value);
+        var user_name = encodeURIComponent(document.getElementById('new_user_name').value);
+        var password  = encodeURIComponent(document.getElementById('new_password').value);
 
         url = "create.json?email=" + email + "&user_name=" + user_name + "&password=" + password;
         xmlhttp.open('POST',url,true);
