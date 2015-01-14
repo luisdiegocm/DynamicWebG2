@@ -206,8 +206,8 @@ UserData.prototype.auth = function(theView,res,restUrl){
 
 
 UserData.prototype.authpass = function(password, hashpassword){
-    var encrypted = encrypted(password);
-    if(encrypted == hashpassword){
+    var encryptedpass = encrypted(password);
+    if(encryptedpass == hashpassword){
         return true;
     } else {
         return false;
