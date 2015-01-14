@@ -12,7 +12,7 @@ var UserController = function(){
 };
 
 //Handles the petition from the main_controller
-UserController.prototype.handle = function(restUrl,res){
+UserController.prototype.handle = function(restUrl,res,req){
     //If you are adding a User
     if (restUrl.id == "login"){
         this.userView.render(res,restUrl);
@@ -21,7 +21,7 @@ UserController.prototype.handle = function(restUrl,res){
         this.userData.create( this.userView ,res,restUrl);
     }else if (restUrl.id == "auth"){
         //login auth
-        this.userData.auth();
+        this.userData.auth(this.userView,res,restUrl,req);
     }else if (restUrl.id == "confirm"){
         //confirm email
         this.userData.confirm(this.userView,res,restUrl);

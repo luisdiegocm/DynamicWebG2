@@ -1,6 +1,7 @@
 "use strict"
 var fs = require('fs')
 var JourneyData = require("../model/journey_mgmt");
+var sessMgmt = require('../model/session_mgmt');
 // npm install redis
 var redis = require("redis")
 
@@ -135,9 +136,27 @@ JourneyView.prototype.getOverallLayout = function(journeyView, res,restUrl,data)
 	var filenameLayout=this.layout	
 	//console.log("DEBUG Journey render in format HTML with template '"+filenameLayout+"'")
 	var returnErr = this.returnErr
+    
+    //Extracts the Cookies from the request, to see if there is already cookies in the Client
+	var cookies 	= sessMgmt.extractCookiesFromRequest(restUrl.req);
+    //Look out for the Session_ID of the cookie
+	var session_id	= sessMgmt.getSessionId(cookies);
+    //Get or create a new session according to the Session_ID
+	var session 	= sessMgmt.getOrCreateSession(session_id,restUrl.params);
+    //Update the res header with the Cookie
+	sessMgmt.updateTheResponseHeaders(cookies,session,res);
+	//Get current User from the Session
+	var user = session.user;
+    
+    console.log(user);
+    
 	fs.readFile(filenameLayout,function(err, filedata){ // async read data (from fs/db)
 		if (err === null ){
 			var layoutHtml= filedata.toString('UTF-8')
+            if (!(user===undefined)){
+                console.log("Hoellel");
+                layoutHtml.replace(/,user);
+            }
 			//console.log("DEBUG SongView HTML Layout '"+layoutHtml+"'")
 			journeyView.getDetailTemplate(journeyView,res,restUrl,data,layoutHtml)
 		}else

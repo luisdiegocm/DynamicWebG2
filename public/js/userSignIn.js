@@ -39,7 +39,7 @@ function signIn(){
         var user_name = encodeURIComponent(document.getElementById('user_name').value);
         var password  = encodeURIComponent(document.getElementById('password').value);
 
-        url = "create.json?user_name=" + user_name + "&password=" + password;
+        url = "auth.json?user_name=" + user_name + "&password=" + password;
         xmlhttp.open('POST',url,true);
 
         xmlhttp.onreadystatechange=function(){

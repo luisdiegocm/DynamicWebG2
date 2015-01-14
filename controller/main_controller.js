@@ -58,7 +58,8 @@ var restRouting = function(req,res,restUrl){
 	sessMgmt.updateTheResponseHeaders(cookies,session,res);
     //Show all the Sessions in the server
     sessMgmt.showSessions();
-  	  
+
+    restUrl.req = req;
 	//Get current User from the Session
 	var user = session.user;
     
@@ -89,7 +90,7 @@ var restRouting = function(req,res,restUrl){
 		break;
 	case 'login':
   		var pageController = require('./login_controller');
-		pageController.handle(restUrl,res);
+		pageController.handle(restUrl,res,req);
 		break;
     /*
 	case 'testing':

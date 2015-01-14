@@ -20,7 +20,8 @@ UrlParser = function(req, postData){
 	this.id=null;
 	this.format=null;
 	this.params={};
-	this.filename=null; // filename without leading / => public/img/logo.png
+	this.filename=null; 
+    this.req = null;// filename without leading / => public/img/logo.png
 	
 	// to update filename, suffix,... 
 

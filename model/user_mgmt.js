@@ -182,19 +182,40 @@ UserData.prototype.returnErr = function(res,msg){
 //
 // find a user by it's username
 //
-UserData.prototype.auth = function(theView,res,restUrl){
+UserData.prototype.auth = function(theView,res,restUrl,req){
     console.log("DEBUG User find user by name '" + restUrl.user_name + "'...");
     var returnErr = this.returnErr;
+    this.db.hgetall("user",function(err, data){
         if (err === null ){
             if (data){
-                var user= JSON.parse(data.toString('UTF-8'));
-                if(UserData.prototype.authpass(restUrl.password, data.password)){
-                    //Authenticate
-                    //Get or create a new session according to the Session_ID
-                    var session = sessMgmt.getOrCreateSession(session_id,restUrl.params);
-                    session.prototype.newUser(restUrl.user_name)
-                } else {
-                    returnErr(res,"Incorrent password");
+                console.log("I AM HERE")
+                for (var i in data){
+                    var user= JSON.parse(data[i]);
+                    if (user.user_name == restUrl.params['user_name']){
+                        if (user.confirm){
+                            if(UserData.prototype.authpass(restUrl.params['password'], user.password)){
+                                //Authenticate
+                                //Get or create a new session according to the Session_ID
+                                //Extracts the Cookies from the request, to see if there is already cookies in the Client
+                                var cookies 	= sessMgmt.extractCookiesFromRequest(req);
+                                //Look out for the Session_ID of the cookie
+                                var session_id	= sessMgmt.getSessionId(cookies);
+                                //Get or create a new session according to the Session_ID
+                                var session 	= sessMgmt.getOrCreateSession(session_id,restUrl.params);
+                                
+                                session.user=restUrl.params['user_name'];
+                                
+                                //Update the res header with the Cookie
+	                            sessMgmt.updateTheResponseHeaders(cookies,session,res);
+                                
+                                theView.render(res,restUrl);
+                            } else {
+                                returnErr(res,"Incorrect password");
+                            }
+                        }else{
+                            break;
+                        }
+                    }
                 }
             }else{
                 returnErr(res,"User with name '" + restUrl.user_name + "' not found.");
@@ -202,11 +223,25 @@ UserData.prototype.auth = function(theView,res,restUrl){
         }else {
             returnErr(res, "Error reading database: " + err);
         }
-    };
+    });
+}
 
 
 UserData.prototype.authpass = function(password, hashpassword){
-    var encryptedpass = encrypted(password);
+    function encrypt(password){
+        var algorithm = 'aes256'; // or any other algorithm supported by OpenSSL
+        var password_key = 'encryptPhrase';
+        var text = password;
+
+        var cipher = crypto.createCipher(algorithm, password_key);
+        var encrypted = cipher.update(text, 'utf8', 'hex') + cipher.final('hex');
+        password = encrypted;
+        return encrypted;
+    };
+    
+    var encryptedpass = encrypt(password);
+    console.log(encryptedpass);
+    console.log(hashpassword);
     if(encryptedpass == hashpassword){
         return true;
     } else {
