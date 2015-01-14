@@ -14,6 +14,7 @@ function createJourney(){
         var country=encodeURIComponent(document.getElementById('newjourney_country').value)
         var summary =encodeURIComponent(document.getElementById('newjourney_summary').value)
         var image=encodeURIComponent(document.getElementById('newjourney_image').value)
+        alert(image);
         url="create.json?name=" + name + "&start=" + start + "&end=" + end + "&country=" + country + "&summary=" + summary + "&image=" + image;
         xmlhttp.open('POST',url,true);
     
@@ -38,18 +39,26 @@ function createJourney(){
 }
 
 function previewFile(){
-       var preview = document.querySelector('img'); //selects the query named img
+    if (window.File && window.FileReader && window.FileList && window.Blob) {
+  // Great success! All the File APIs are supported.
+
+       var preview = document.getElementById("img_newjourney"); //selects the query named img
        var file    = document.querySelector('input[type=file]').files[0]; //sames as here
        var reader  = new FileReader();
 
-       reader.onloadend = function () {
+       reader.onload = function (e) {
            preview.src = reader.result;
-           console.log(reader.result);
-       }
+           alert(reader.result);
+   }
+       
+       
 
        if (file) {
            reader.readAsDataURL(file); //reads the data as a URL
        } else {
            preview.src = "";
        }
+    }else {
+        alert('The File APIs are not fully supported in this browser.');
+}
 }
