@@ -100,7 +100,7 @@ JourneyView.prototype.formatHtml = function(res,restUrl,data,htmlTemplate){
 	
 }
 
-JourneyView.prototype.getDetailTemplate = function(journeyView, res,restUrl,data,layoutHtml){
+JourneyView.prototype.getDetailTemplate = function(journeyView, res,restUrl,data,layoutHtml,user){
     //Grab the format of the query
 	var format = restUrl.format
     //If you are searching
@@ -124,9 +124,13 @@ JourneyView.prototype.getDetailTemplate = function(journeyView, res,restUrl,data
             if (restUrl.resource=="edit"){
                 templateDetail+="<button id='saveJourney_"+restUrl.id+"' onclick = 'javascript:editJourney("+restUrl.id+")'>Save Journey</button>"
             }
-			var htmlTemplate = layoutHtml.replace("{CONTENTS}",templateDetail)
+			var htmlTemplate = layoutHtml.replace("{CONTENTS}",templateDetail);
             
-			journeyView.formatHtml(res,restUrl,data,htmlTemplate);
+            if (user){
+                htmlTemplate = htmlTemplate.replace("Log In",user);
+            }
+            
+			journeyView.formatHtml(res,restUrl,data,htmlTemplate,user);
 		}else
 			returnErr(res,"Error reading detail-template file '"+filenameDetailTemplate+"' for journeys: "+err);
 	});
@@ -155,10 +159,10 @@ JourneyView.prototype.getOverallLayout = function(journeyView, res,restUrl,data)
 			var layoutHtml= filedata.toString('UTF-8')
             if (!(user===undefined)){
                 console.log("Hoellel");
-                layoutHtml.replace(/,user);
+                layoutHtml.replace(/Log In/g,user);
             }
 			//console.log("DEBUG SongView HTML Layout '"+layoutHtml+"'")
-			journeyView.getDetailTemplate(journeyView,res,restUrl,data,layoutHtml)
+			journeyView.getDetailTemplate(journeyView,res,restUrl,data,layoutHtml,user)
 		}else
 			returnErr(res,"Error reading global layout-template file '"+filenameLayout+"'. Error "+err);
 	})

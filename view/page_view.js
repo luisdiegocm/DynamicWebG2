@@ -1,5 +1,7 @@
 //Modules
 fs=require("fs");
+var sessMgmt = require('../model/session_mgmt');
+
 
 //Initialize the object
 var PageView = function(){
@@ -27,7 +29,7 @@ PageView.prototype.formatHtml = function(res,restUrl,data,htmlTemplate){
 	
 };
 
-PageView.prototype.getDetailTemplate = function(pageView, res,restUrl,data,layoutHtml){
+PageView.prototype.getDetailTemplate = function(pageView, res,restUrl,data,layoutHtml,user){
     //Retrieve the format of the replaced layout.
 	var format = restUrl.format;
     //Switch the id of the URL to see which page is
@@ -47,6 +49,11 @@ PageView.prototype.getDetailTemplate = function(pageView, res,restUrl,data,layou
 			var templateDetail= layoutdata.toString('UTF-8');
             //Replace the {CONTENTS} space with the String URL
 			htmlTemplate = layoutHtml.replace("{CONTENTS}",templateDetail);
+            
+            if (user){
+                htmlTemplate = htmlTemplate.replace("Log In",user);   
+            }
+            
 			pageView.formatHtml(res,restUrl,data,htmlTemplate);
 		}else
 			returnErr(res,"Error reading detail-template file '"+filenameDetailTemplate+"' for songs: "+err);
@@ -57,6 +64,18 @@ PageView.prototype.getDetailTemplate = function(pageView, res,restUrl,data,layou
 PageView.prototype.getOverallLayout = function(pageView, res,restUrl,data){
     //Create the variable for the layout of the pageView
 	var filenameLayout=this.layout;
+    
+    //Extracts the Cookies from the request, to see if there is already cookies in the Client
+	var cookies 	= sessMgmt.extractCookiesFromRequest(restUrl.req);
+    //Look out for the Session_ID of the cookie
+	var session_id	= sessMgmt.getSessionId(cookies);
+    //Get or create a new session according to the Session_ID
+	var session 	= sessMgmt.getOrCreateSession(session_id,restUrl.params);
+    //Update the res header with the Cookie
+	sessMgmt.updateTheResponseHeaders(cookies,session,res);
+	//Get current User from the Session
+	var user = session.user;
+    
 	console.log("Template '"+filenameLayout+"'");
 	var returnErr = this.returnErr;
     //Read the layout to retrieve it
@@ -65,7 +84,7 @@ PageView.prototype.getOverallLayout = function(pageView, res,restUrl,data){
             //Create a string with the HTML of the Layout
 			var layoutHtml= filedata.toString('UTF-8');
 			console.log("DEBUG PageView HTML Layout '"+layoutHtml+"'");
-			pageView.getDetailTemplate(pageView,res,restUrl,data,layoutHtml);
+			pageView.getDetailTemplate(pageView,res,restUrl,data,layoutHtml,user);
 		}else
 			returnErr(res,"Error reading global layout-template file '"+filenameLayout+"'. Error "+err);
 	});

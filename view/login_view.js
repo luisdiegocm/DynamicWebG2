@@ -1,6 +1,8 @@
 "use strict"
 var fs = require('fs')
 var UserData = require("../model/user_mgmt");
+var sessMgmt = require('../model/session_mgmt');
+
 // npm install redis
 var redis = require("redis")
 
@@ -29,7 +31,7 @@ LoginView.prototype.formatHtml = function(res,restUrl,data,htmlTemplate){
     }
 };
 
-LoginView.prototype.getDetailTemplate = function(loginView, res, restUrl, data, layoutHtml){
+LoginView.prototype.getDetailTemplate = function(loginView, res, restUrl, data, layoutHtml,user){
     //Grab the format of the query
     var format = restUrl.format;
 
@@ -50,6 +52,10 @@ LoginView.prototype.getDetailTemplate = function(loginView, res, restUrl, data, 
                 templateDetail+="<button id='saveJourney_"+restUrl.id+"' onclick = 'javascript:editJourney("+restUrl.id+")'>Save Journey</button>"
             }
             var htmlTemplate = layoutHtml.replace("{CONTENTS}",templateDetail)
+            
+            if (user){
+                htmlTemplate = htmlTemplate.replace("Log In",user);
+            }
 
             loginView.formatHtml(res,restUrl,data,htmlTemplate);
         }else{
@@ -60,11 +66,23 @@ LoginView.prototype.getDetailTemplate = function(loginView, res, restUrl, data, 
 LoginView.prototype.getOverallLayout = function(loginView, res,restUrl,data){
     var filenameLayout=this.layout
     //console.log("DEBUG Journey render in format HTML with template '"+filenameLayout+"'")
+    
+    //Extracts the Cookies from the request, to see if there is already cookies in the Client
+	var cookies 	= sessMgmt.extractCookiesFromRequest(restUrl.req);
+    //Look out for the Session_ID of the cookie
+	var session_id	= sessMgmt.getSessionId(cookies);
+    //Get or create a new session according to the Session_ID
+	var session 	= sessMgmt.getOrCreateSession(session_id,restUrl.params);
+    //Update the res header with the Cookie
+	sessMgmt.updateTheResponseHeaders(cookies,session,res);
+	//Get current User from the Session
+	var user = session.user;
+    
     var returnErr = this.returnErr
     fs.readFile(filenameLayout,function(err, filedata){ // async read data (from fs/db)
         if (err === null ){
             var layoutHtml= filedata.toString('UTF-8')
-            loginView.getDetailTemplate(loginView,res,restUrl,data,layoutHtml)
+            loginView.getDetailTemplate(loginView,res,restUrl,data,layoutHtml,user)
         }else
             returnErr(res,"Error reading global layout-template file '"+filenameLayout+"'. Error "+err);
     })
