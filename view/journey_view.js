@@ -127,7 +127,8 @@ JourneyView.prototype.getDetailTemplate = function(journeyView, res,restUrl,data
 			var htmlTemplate = layoutHtml.replace("{CONTENTS}",templateDetail);
             
             if (user){
-                htmlTemplate = htmlTemplate.replace("Log In",user);
+                htmlTemplate = htmlTemplate.replace("<marquee> Welcome to MyJourney </marquee>","<marquee> Welcome to MyJourney - "+user+"</marquee>");
+                htmlTemplate = htmlTemplate.replace(/Log In/g, "Log Out")
             }
             
 			journeyView.formatHtml(res,restUrl,data,htmlTemplate,user);
@@ -158,8 +159,7 @@ JourneyView.prototype.getOverallLayout = function(journeyView, res,restUrl,data)
 		if (err === null ){
 			var layoutHtml= filedata.toString('UTF-8')
             if (!(user===undefined)){
-                console.log("Hoellel");
-                layoutHtml.replace(/Log In/g,user);
+                layoutHtml.replace("<marquee> Welcome to MyJourney </marquee>","<marquee> Welcome to MyJourney - "+user+"</marquee>");
             }
 			//console.log("DEBUG SongView HTML Layout '"+layoutHtml+"'")
 			journeyView.getDetailTemplate(journeyView,res,restUrl,data,layoutHtml,user)

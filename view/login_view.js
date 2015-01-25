@@ -54,7 +54,8 @@ LoginView.prototype.getDetailTemplate = function(loginView, res, restUrl, data, 
             var htmlTemplate = layoutHtml.replace("{CONTENTS}",templateDetail)
             
             if (user){
-                htmlTemplate = htmlTemplate.replace("Log In",user);
+                htmlTemplate = htmlTemplate.replace("Log Out","Log In");
+                sessMgmt.cleanSessions();
             }
 
             loginView.formatHtml(res,restUrl,data,htmlTemplate);

@@ -51,7 +51,8 @@ PageView.prototype.getDetailTemplate = function(pageView, res,restUrl,data,layou
 			htmlTemplate = layoutHtml.replace("{CONTENTS}",templateDetail);
             
             if (user){
-                htmlTemplate = htmlTemplate.replace("Log In",user);   
+                htmlTemplate = htmlTemplate.replace("<marquee> Welcome to MyJourney </marquee>","<marquee> Welcome to MyJourney - "+user+"</marquee>");
+                htmlTemplate = htmlTemplate.replace(/Log In/g, "Log Out")   
             }
             
 			pageView.formatHtml(res,restUrl,data,htmlTemplate);

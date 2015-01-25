@@ -15,7 +15,7 @@ function createUser(){
         var password  = encodeURIComponent(document.getElementById('new_password').value);
         var re = /\S+%40\S+\.\S+/;
         if (re.test(email)){
-            if (user_name != "" || password != ""){
+            if (user_name != "" && password != ""){
                 url = "create.json?email=" + email + "&user_name=" + user_name + "&password=" + password;
                 xmlhttp.open('POST',url,true);
 
@@ -26,7 +26,7 @@ function createUser(){
                             alert("The User was registed correctly. An email was sended to you to confirm your registration.");
                             window.open("/journey/all.html","_self");
                         }else {
-                            alert("Error from the web service for action : "+xmlhttp.status+": "+xmlhttp.responseText)
+                            alert("Username not found");
                         }
                     }
                 };
@@ -45,11 +45,9 @@ function signIn(){
     if (confirm("Are you sure?")){
         var user_name = encodeURIComponent(document.getElementById('user_name').value);
         var password  = encodeURIComponent(document.getElementById('password').value);
-
-        if (user_name != "" || password != ""){
+        if (user_name != "" && password != ""){
             url = "auth.json?user_name=" + user_name + "&password=" + password;
             xmlhttp.open('POST',url,true);
-
             xmlhttp.onreadystatechange=function(){
                 if (xmlhttp.readyState == 4){
                     if (xmlhttp.status == 200){

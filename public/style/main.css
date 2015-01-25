@@ -1,5 +1,29 @@
-// TODO: provide CSS - File
+#fsbg {
+	height: auto;
+	width: 100%;
+	position: fixed;
+	z-index: -100;
+	left: 0px;
+	top: 0px;
+	min-height: 100%;
+	max-width: none;
+	min-width: 1040px;
+}
 
-body {
-    background-color: aqua;
+a:link {
+	colour: #000000
+	text-decoration: underline;
+	color: #000000;
+	font-family: alike;
+	font-style: normal;
+	font-weight: 400;
+	font-size: large;
+}
+a:active {
+	colour: #000000
+	text-decoration: underline}
+a:hover {
+	colour: #000000
+	text-decoration: underline;
+	color: #00BFCC;
 }
