@@ -177,7 +177,7 @@ JourneyView.prototype.render = function(res,restUrl ,data){
 		console.log("DEBUG: NEED TO IMPROVE FROM DATA "+data)
 		res.writeHead(200, {'Content-Type': 'application/json'} );
 		// format out data <= here into JSON
-		var result = JSON.stringify(data) // fill template
+		var result = JSON.stringify(data,null,3) // fill template
 		result +="\n"
 		res.end(result); // return formatted data to the client
 
